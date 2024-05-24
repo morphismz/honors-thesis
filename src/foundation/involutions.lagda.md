@@ -8,6 +8,7 @@ module foundation.involutions where
 
 ```agda
 open import foundation.automorphisms
+open import foundation.contractible-types
 open import foundation.dependent-pair-types
 open import foundation.endomorphisms
 open import foundation.equivalence-extensionality
@@ -18,6 +19,7 @@ open import foundation.homotopy-algebra
 open import foundation.homotopy-induction
 open import foundation.negation
 open import foundation.structure-identity-principle
+open import foundation.universal-property-equivalences
 open import foundation.universe-levels
 open import foundation.whiskering-homotopies-composition
 
@@ -25,6 +27,7 @@ open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.injective-maps
+open import foundation.postcomposition-functions
 open import foundation-core.propositions
 open import foundation-core.subtypes
 open import foundation-core.torsorial-type-families
@@ -218,33 +221,92 @@ module _
   coherence-is-involution = f ·l H ~ H ·r f
 ```
 
+### We can obtain an involution on a type equivalent to a type equipped with an involution
+
+```agda
+involution-equiv-involution :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) →
+  involution A → involution X
+pr1 (involution-equiv-involution A X e f) =
+  (map-equiv e) ∘ (map-involution f) ∘ (map-inv-equiv e)
+pr2 (involution-equiv-involution A X e f) = 
+  ( double-whisker-comp
+    ( map-equiv e ∘ map-involution f)
+    ( is-retraction-map-inv-equiv e)
+    ( map-involution f ∘ map-inv-equiv e)) ∙h
+  ( double-whisker-comp
+    ( map-equiv e)
+    ( is-involution-map-involution f)
+    ( map-inv-equiv e)) ∙h
+  ( is-section-map-inv-equiv e)
+
+involution-equiv-involution' :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) →
+  involution X → involution A
+pr1 (involution-equiv-involution' A X e f) =
+  (map-inv-equiv e) ∘ (map-involution f) ∘ (map-equiv e)
+pr2 (involution-equiv-involution' A X e f) = 
+  ( double-whisker-comp
+    ( map-inv-equiv e ∘ map-involution f)
+    ( is-section-map-inv-equiv e)
+    ( map-involution f ∘ map-equiv e)) ∙h
+  ( double-whisker-comp
+    ( map-inv-equiv e)
+    ( is-involution-map-involution f)
+    ( map-equiv e)) ∙h
+  ( is-retraction-map-inv-equiv e)
+```
+
+### The above process preserves ___
+
+```agda
+contraction-involution-equiv-contraction-involution :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) (f : involution A)
+  (H : (g : involution A) → htpy-involution f g) →
+  (g : involution X) → htpy-involution (involution-equiv-involution A X e f) g
+pr1 (contraction-involution-equiv-contraction-involution A X e f H g) = {!!}
+pr2 (contraction-involution-equiv-contraction-involution A X e f H g) = {!!}
+{-  is-injective-equiv
+    ( equiv-precomp e X)
+    ( is-injective-equiv
+      ( equiv-postcomp A (inv-equiv e))
+      ( ( eq-htpy
+        ( ( left-whisker-comp (map-inv-equiv e ∘ map-equiv e ∘ map-involution f) (is-retraction-map-inv-equiv e)) ∙h
+        ( right-whisker-comp (is-retraction-map-inv-equiv e) (map-involution f)))) ∙
+      ( ( H (involution-equiv-involution' A X e g)))))-}
+```
+ 
 ### Fixed point free involutions
 
 ```agda
 module _
-  {l : Level} (X : UU l)
+  {l : Level}
   where
 
   is-fixed-point-free-involution :
-    involution X → UU l 
-  is-fixed-point-free-involution =
+    {X : UU l} → involution X → UU l 
+  is-fixed-point-free-involution {X} =
     (is-fixed-point-free-endomorphism X) ∘ map-involution
 
   fixed-point-free-involution :
-    UU l
-  fixed-point-free-involution = Σ (involution X) is-fixed-point-free-involution
+    UU l → UU l
+  fixed-point-free-involution X = Σ (involution X) is-fixed-point-free-involution
+
+module _
+  {l : Level} {X : UU l}
+  where
 
   involution-fixed-point-free-involution :
-    fixed-point-free-involution → involution X
+    fixed-point-free-involution X → involution X
   involution-fixed-point-free-involution = pr1
 
   map-fixed-point-free-involution :
-    fixed-point-free-involution → X → X
+    fixed-point-free-involution X → X → X
   map-fixed-point-free-involution =
     map-involution ∘ involution-fixed-point-free-involution
 
   is-fixed-point-free-involution-fixed-point-free-involution :
-    (f : fixed-point-free-involution) →
+    (f : fixed-point-free-involution X) →
     is-fixed-point-free-involution (involution-fixed-point-free-involution f)
   is-fixed-point-free-involution-fixed-point-free-involution = pr2
 ```
@@ -253,7 +315,7 @@ module _
 
 ```agda
   is-subtype-is-fixed-point-free-involution :
-    is-subtype is-fixed-point-free-involution
+    is-subtype (is-fixed-point-free-involution {X = X})
   is-subtype-is-fixed-point-free-involution f =
     is-prop-Π λ x → is-prop-neg
 
@@ -263,6 +325,59 @@ module _
     is-fixed-point-free-involution f
   pr2 (subtype-fixed-point-free-involution f) =
     is-subtype-is-fixed-point-free-involution f
+```
+
+### We can obtain a fixed point free involution on a type equivalent to a type equipped with a fixed point free involution
+
+```agda
+fixed-point-free-involution-equiv-fixed-point-free-involution :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e :  A ≃ X) → fixed-point-free-involution A → fixed-point-free-involution X
+pr1 (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f) =
+  involution-equiv-involution A X e (involution-fixed-point-free-involution f)
+pr2 (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f) x t =
+  is-fixed-point-free-involution-fixed-point-free-involution
+    ( f)
+    ( map-inv-equiv e x)
+    ( is-injective-equiv e (t ∙ inv (is-section-map-inv-equiv e x)))
+
+fixed-point-free-involution-equiv-fixed-point-free-involution' : 
+    {l1 l2 : Level} (A : UU l1) (X : UU l2) (e :  A ≃ X) → fixed-point-free-involution X → fixed-point-free-involution A
+pr1 (fixed-point-free-involution-equiv-fixed-point-free-involution' A X e f) = 
+  involution-equiv-involution' A X e (involution-fixed-point-free-involution f)
+pr2 (fixed-point-free-involution-equiv-fixed-point-free-involution' A X e f) x t =
+  is-fixed-point-free-involution-fixed-point-free-involution
+    ( f)
+    ( map-equiv e x)
+    ( is-injective-equiv (inv-equiv e) (t ∙ inv (is-retraction-map-inv-equiv e x)))
+```
+
+```agda
+contraction-fixed-point-free-involution-equiv-contraction-fixed-point-free-involution :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) (f : fixed-point-free-involution A)
+  (H : (g : fixed-point-free-involution A) →
+  (map-fixed-point-free-involution f) ＝ (map-fixed-point-free-involution g)) →
+  (g : fixed-point-free-involution X) →
+  ( ( map-fixed-point-free-involution (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f)) ＝
+  ( map-fixed-point-free-involution g))
+contraction-fixed-point-free-involution-equiv-contraction-fixed-point-free-involution A X e f H g =
+  is-injective-equiv
+    ( equiv-precomp e X)
+    ( is-injective-equiv
+      ( equiv-postcomp A (inv-equiv e))
+      ( ( eq-htpy
+        ( ( left-whisker-comp
+          ( map-inv-equiv e ∘ map-equiv e ∘ map-fixed-point-free-involution f)
+          ( is-retraction-map-inv-equiv e)) ∙h
+        ( right-whisker-comp
+          ( is-retraction-map-inv-equiv e)
+          ( map-fixed-point-free-involution f)))) ∙
+      ( ( H (fixed-point-free-involution-equiv-fixed-point-free-involution' A X e g)))))
+
+is-contr-fixed-point-free-involution-equiv-is-contr-fixed-point-free-involution :
+  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) (f : fixed-point-free-involution A) →
+  is-contr (fixed-point-free-involution A) → is-contr (fixed-point-free-involution X)
+pr1 (is-contr-fixed-point-free-involution-equiv-is-contr-fixed-point-free-involution A X e f t) = {!!}
+pr2 (is-contr-fixed-point-free-involution-equiv-is-contr-fixed-point-free-involution A X e f t) = {!!}
 ```
 
 ## Examples

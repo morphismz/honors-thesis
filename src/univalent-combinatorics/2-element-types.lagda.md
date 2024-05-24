@@ -114,6 +114,11 @@ zero-standard-2-Element-Type = map-raise (zero-Fin 1)
 one-standard-2-Element-Type :
   {l : Level} → type-standard-2-Element-Type l
 one-standard-2-Element-Type = map-raise (one-Fin 1)
+
+Fin-two-ℕ-2-Element-Type :
+  2-Element-Type lzero
+pr1 Fin-two-ℕ-2-Element-Type = Fin 2
+pr2 Fin-two-ℕ-2-Element-Type = refl-mere-equiv (Fin 2)
 ```
 
 ## Properties
@@ -812,6 +817,25 @@ module _
     (x ＝ map-equiv e (zero-Fin 1)) + (x ＝ map-equiv e (one-Fin 1))
   decide-value-equiv-Fin-two-ℕ e x =
     center (is-contr-decide-value-equiv-Fin-two-ℕ e x)
+```
+
+### Any element of `Fin 2` is either 0 or 1
+
+```agda
+decide-value-Fin-two-ℕ :
+  (x : Fin 2) → (x ＝ zero-Fin 1) + (x ＝ one-Fin 1)
+decide-value-Fin-two-ℕ =
+  decide-value-equiv-Fin-two-ℕ Fin-two-ℕ-2-Element-Type (id-equiv)  
+
+eq-one-not-eq-zero-Fin-two-ℕ :
+  (x : Fin 2) → x ≠ zero-Fin 1 → x ＝ one-Fin 1
+eq-one-not-eq-zero-Fin-two-ℕ x p =
+  rec-coproduct (λ t → ind-empty (p t)) (id) (decide-value-Fin-two-ℕ x)
+
+eq-zero-not-eq-one-Fin-two-ℕ :
+  (x : Fin 2) → x ≠ one-Fin 1 → x ＝ zero-Fin 1
+eq-zero-not-eq-one-Fin-two-ℕ x p =
+  rec-coproduct (id) (λ t → ind-empty (p t)) (decide-value-Fin-two-ℕ x)  
 ```
 
 ### There can't be three distinct elements in a `2`-element type
