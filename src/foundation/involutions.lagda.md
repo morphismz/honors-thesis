@@ -9,12 +9,14 @@ module foundation.involutions where
 ```agda
 open import foundation.automorphisms
 open import foundation.dependent-pair-types
+open import foundation.endomorphisms
 open import foundation.equivalence-extensionality
 open import foundation.equivalences
 open import foundation.function-extensionality
 open import foundation.fundamental-theorem-of-identity-types
 open import foundation.homotopy-algebra
 open import foundation.homotopy-induction
+open import foundation.negation
 open import foundation.structure-identity-principle
 open import foundation.universe-levels
 open import foundation.whiskering-homotopies-composition
@@ -23,6 +25,8 @@ open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.injective-maps
+open import foundation-core.propositions
+open import foundation-core.subtypes
 open import foundation-core.torsorial-type-families
 open import foundation-core.truncated-types
 open import foundation-core.truncation-levels
@@ -212,6 +216,53 @@ module _
 
   coherence-is-involution : UU l
   coherence-is-involution = f ·l H ~ H ·r f
+```
+
+### Fixed point free involutions
+
+```agda
+module _
+  {l : Level} (X : UU l)
+  where
+
+  is-fixed-point-free-involution :
+    involution X → UU l 
+  is-fixed-point-free-involution =
+    (is-fixed-point-free-endomorphism X) ∘ map-involution
+
+  fixed-point-free-involution :
+    UU l
+  fixed-point-free-involution = Σ (involution X) is-fixed-point-free-involution
+
+  involution-fixed-point-free-involution :
+    fixed-point-free-involution → involution X
+  involution-fixed-point-free-involution = pr1
+
+  map-fixed-point-free-involution :
+    fixed-point-free-involution → X → X
+  map-fixed-point-free-involution =
+    map-involution ∘ involution-fixed-point-free-involution
+
+  is-fixed-point-free-involution-fixed-point-free-involution :
+    (f : fixed-point-free-involution) →
+    is-fixed-point-free-involution (involution-fixed-point-free-involution f)
+  is-fixed-point-free-involution-fixed-point-free-involution = pr2
+```
+
+### The subtype of fixed point free involutions
+
+```agda
+  is-subtype-is-fixed-point-free-involution :
+    is-subtype is-fixed-point-free-involution
+  is-subtype-is-fixed-point-free-involution f =
+    is-prop-Π λ x → is-prop-neg
+
+  subtype-fixed-point-free-involution :
+    subtype l (involution X)
+  pr1 (subtype-fixed-point-free-involution f) =
+    is-fixed-point-free-involution f
+  pr2 (subtype-fixed-point-free-involution f) =
+    is-subtype-is-fixed-point-free-involution f
 ```
 
 ## Examples

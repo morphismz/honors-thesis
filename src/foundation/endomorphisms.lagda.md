@@ -10,12 +10,15 @@ open import foundation-core.endomorphisms public
 
 ```agda
 open import foundation.dependent-pair-types
+open import foundation.negation
 open import foundation.unit-type
 open import foundation.universe-levels
 
 open import foundation-core.function-types
 open import foundation-core.identity-types
+open import foundation-core.propositions
 open import foundation-core.sets
+open import foundation-core.subtypes
 
 open import group-theory.monoids
 open import group-theory.semigroups
@@ -56,6 +59,39 @@ pr1 (endo-Monoid A) = endo-Semigroup A
 pr1 (pr2 (endo-Monoid A)) = id
 pr1 (pr2 (pr2 (endo-Monoid A))) f = refl
 pr2 (pr2 (pr2 (endo-Monoid A))) f = refl
+```
+
+### Fixed point free endomorphisms
+
+```agda
+module _
+  {l : Level} (X : UU l)
+  where
+
+  is-fixed-point-free-endomorphism :
+    (X → X) → UU l
+  is-fixed-point-free-endomorphism f =
+    ((x : X) → ¬ (f x ＝ x))
+
+  fixed-point-free-endomorphism :
+    UU l
+  fixed-point-free-endomorphism = Σ (X → X) is-fixed-point-free-endomorphism
+```
+
+### The subtype of fixed point free endomorphisms
+
+```agda
+  is-subtype-is-fixed-point-free-endomorphism :
+    is-subtype is-fixed-point-free-endomorphism
+  is-subtype-is-fixed-point-free-endomorphism f =
+    is-prop-Π λ x → is-prop-neg
+
+  subtype-fixed-point-free-endomorphism :
+    subtype l (X → X)
+  pr1 (subtype-fixed-point-free-endomorphism f) =
+    is-fixed-point-free-endomorphism f
+  pr2 (subtype-fixed-point-free-endomorphism f) =
+    is-subtype-is-fixed-point-free-endomorphism f
 ```
 
 ## See also
