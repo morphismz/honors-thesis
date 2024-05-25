@@ -89,6 +89,20 @@ module _
   right-unwhisker-concat-htpy H K x = right-unwhisker-concat (H x) (K x)
 ```
 
+### Double whiskering of homotopies
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h k :  (x : A) → B x}
+  (H : f ~ g) {i j : g ~ h} (I : i ~ j) (J : h ~ k)
+  where
+
+  double-whisker-concat-htpy :
+    H ∙h i ∙h J ~ H ∙h j ∙h J
+  double-whisker-concat-htpy =
+    right-whisker-concat-htpy (left-whisker-concat-htpy H I) J
+```
+
 ## Properties
 
 ### The unit and absorption laws for left whiskering of homotopies with respect to concatenation
@@ -130,4 +144,19 @@ module _
     right-whisker-concat-htpy K refl-htpy ∙h right-unit-htpy
   right-unit-law-right-whisker-concat-htpy K x =
     right-unit-law-right-whisker-concat (K x)
+```
+
+### `double-whisker-concat-htpy` distributes over concatination of homotopies
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l2} {B : A → UU l2} {e f g h : (x : A) → B x}
+  (H : e ~ f) {i j k : f ~ g} (I : i ~ j) (J : j ~ k) (K : g ~ h)
+  where
+
+  distributive-double-whisker-concat-htpy-concat-htpy :
+    double-whisker-concat-htpy H (I ∙h J) K ~
+    (double-whisker-concat-htpy H I K) ∙h (double-whisker-concat-htpy H J K)
+  distributive-double-whisker-concat-htpy-concat-htpy x =
+    distributive-double-whisker-concat-concat (H x) (I x) (J x) (K x)
 ```

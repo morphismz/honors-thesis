@@ -98,3 +98,29 @@ module _
     left ·l H ·r right ~ left ·l H' ·r right
   double-whisker-comp² left α right = double-whisker-comp (ap left) α right
 ```
+
+### Distributivity of double whiskering over concatenation of homotopies
+
+```agda
+module _
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2}
+  {C : (x : A) → B x → UU l3} {D : (x : A) → B x → UU l4}
+  (left : {x : A} {y : B x} → C x y → D x y)
+  {g h k : {x : A} (y : B x) → C x y}
+  (H : {x : A} → g {x} ~ h {x})
+  (K : {x : A} → h {x} ~ k {x})
+  (right : (x : A) → B x)
+  where
+
+  distributive-double-whisker-comp-concat :
+    double-whisker-comp left (H ∙h K) right ~
+    double-whisker-comp left H right ∙h double-whisker-comp left K right
+  distributive-double-whisker-comp-concat =
+    ( right-whisker-comp²
+      ( distributive-left-whisker-comp-concat left H K)
+      ( right)) ∙h
+    ( distributive-right-whisker-comp-concat
+      ( right)
+      ( left ·l H)
+      ( left ·l K))
+```

@@ -306,6 +306,21 @@ module _
   distributive-right-whisker-concat-concat refl β s = refl
 ```
 
+### Double whiskering of identifications distributes over concatination
+
+```agda
+module _
+  {l : Level} {A : UU l}
+  {a b c d : A} 
+  where
+
+  distributive-double-whisker-concat-concat :
+    (p : a ＝ b) {r s t : b ＝ c} (u : r ＝ s) (v : s ＝ t) (q : c ＝ d) →
+    double-whisker-concat p (u ∙ v) q ＝
+    (double-whisker-concat p u q) ∙ (double-whisker-concat p v q)
+  distributive-double-whisker-concat-concat p refl refl q = refl
+```
+
 ### Left whiskering of identifications commutes with inverses of identifications
 
 ```agda

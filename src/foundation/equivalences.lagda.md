@@ -9,6 +9,7 @@ open import foundation-core.equivalences public
 <details><summary>Imports</summary>
 
 ```agda
+open import foundation.action-on-homotopies-functions
 open import foundation.action-on-identifications-functions
 open import foundation.cones-over-cospan-diagrams
 open import foundation.dependent-pair-types
@@ -20,6 +21,8 @@ open import foundation.transposition-identifications-along-equivalences
 open import foundation.truncated-maps
 open import foundation.universal-property-equivalences
 open import foundation.universe-levels
+open import foundation.whiskering-homotopies-composition
+open import foundation.whiskering-higher-homotopies-composition
 
 open import foundation-core.commuting-triangles-of-maps
 open import foundation-core.contractible-maps
@@ -39,6 +42,7 @@ open import foundation-core.sections
 open import foundation-core.subtypes
 open import foundation-core.truncation-levels
 open import foundation-core.type-theoretic-principle-of-choice
+open import foundation.whiskering-homotopies-concatenation
 ```
 
 </details>
@@ -621,6 +625,169 @@ module _
           ( swap-cone f g c)
           ( is-equiv-f)
           ( is-equiv-q))
+```
+
+### Conjugation by an equivalence
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B)
+  where
+
+  conjugate-equiv :
+    (A → A) → B → B
+  conjugate-equiv f = (map-equiv e) ∘ f ∘ (map-inv-equiv e)
+
+  conjugate-inv-equiv :
+    (B → B) → (A → A)
+  conjugate-inv-equiv f = (map-inv-equiv e) ∘ f ∘ (map-equiv e)
+
+  is-section-conjugate-inv-equiv-htpy :
+    (f : B → B) → (conjugate-equiv ∘ conjugate-inv-equiv) f ~ f
+  is-section-conjugate-inv-equiv-htpy f =
+    ( ( right-whisker-comp
+      ( is-section-map-inv-equiv e)
+      ( f ∘ map-equiv e ∘ map-inv-equiv e))∙h
+    ( left-whisker-comp
+      ( f)
+      ( is-section-map-inv-equiv e)))  
+
+  is-retraction-conjugate-inv-equiv-htpy :
+    (f : A → A) → (conjugate-inv-equiv ∘ conjugate-equiv) f ~ f
+  is-retraction-conjugate-inv-equiv-htpy f =
+    ( ( right-whisker-comp
+      ( is-retraction-map-inv-equiv e)
+      ( f ∘ map-inv-equiv e ∘ map-equiv e)) ∙h
+    ( left-whisker-comp
+      ( f)
+      ( is-retraction-map-inv-equiv e)))
+
+  abstract
+    is-section-conjugate-inv-equiv :
+      conjugate-equiv ∘ conjugate-inv-equiv ~ id
+    is-section-conjugate-inv-equiv f =
+      eq-htpy
+        ( ( right-whisker-comp
+          ( is-section-map-inv-equiv e)
+          ( f ∘ map-equiv e ∘ map-inv-equiv e))∙h
+        ( left-whisker-comp
+          ( f)
+          ( is-section-map-inv-equiv e)))
+
+    is-retraction-conjugate-inv-equiv :
+      conjugate-inv-equiv ∘ conjugate-equiv ~ id
+    is-retraction-conjugate-inv-equiv f =
+      eq-htpy
+        ( ( right-whisker-comp
+          ( is-retraction-map-inv-equiv e)
+          ( f ∘ map-inv-equiv e ∘ map-equiv e)) ∙h
+        ( left-whisker-comp
+          ( f)
+          ( is-retraction-map-inv-equiv e)))
+
+  is-equiv-conjugate-equiv :
+    is-equiv (conjugate-equiv)
+  is-equiv-conjugate-equiv =
+    is-equiv-is-invertible
+      ( conjugate-inv-equiv)
+      ( is-section-conjugate-inv-equiv)
+      ( is-retraction-conjugate-inv-equiv)
+
+  equiv-conjugate-equiv :
+    (A → A) ≃ (B → B)
+  pr1 equiv-conjugate-equiv = conjugate-equiv
+  pr2 equiv-conjugate-equiv = is-equiv-conjugate-equiv
+
+  distributive-conjugate-equiv-comp :
+    (f g : A → A) →
+    conjugate-equiv (f ∘ g) ~ conjugate-equiv f ∘ conjugate-equiv g
+  distributive-conjugate-equiv-comp f g =
+    inv-htpy
+      ( double-whisker-comp
+        ( map-equiv e ∘ f)
+        ( is-retraction-map-inv-equiv e)
+        (g ∘ map-inv-equiv e))
+
+  distributive-conjugate-inv-equiv-comp :
+    (f g : B → B) →
+    conjugate-inv-equiv (f ∘ g) ~ conjugate-inv-equiv f ∘ conjugate-inv-equiv g
+  distributive-conjugate-inv-equiv-comp f g =
+    inv-htpy
+      ( double-whisker-comp
+        ( map-inv-equiv e ∘ f)
+        ( is-section-map-inv-equiv e)
+        ( g ∘ map-equiv e))
+
+
+  htpy-conjugate-equiv :
+    {f g : A → A} → f ~ g → conjugate-equiv f ~ conjugate-equiv g
+  htpy-conjugate-equiv H =
+    double-whisker-comp (map-equiv e) H (map-inv-equiv e)
+
+  distributive-htpy-conjugate-equiv-concat-htpy :
+    {f g h : A → A} (H : f ~ g) (K : g ~ h) →
+    htpy-conjugate-equiv (H ∙h K) ~
+    htpy-conjugate-equiv H ∙h htpy-conjugate-equiv K
+  distributive-htpy-conjugate-equiv-concat-htpy H K =
+    distributive-double-whisker-comp-concat
+      ( map-equiv e)
+      ( H)
+      ( K)
+      ( map-inv-equiv e)
+
+  htpy-conjugate-inv-equiv :
+    {f g : B → B} → f ~ g → conjugate-inv-equiv f ~ conjugate-inv-equiv g
+  htpy-conjugate-inv-equiv H =
+    double-whisker-comp (map-inv-equiv e) H (map-equiv e)
+  
+  distributive-htpy-conjugate-inv-equiv-concat-htpy :
+    {f g h : B → B} (H : f ~ g) (K : g ~ h) →
+    htpy-conjugate-inv-equiv (H ∙h K) ~
+    htpy-conjugate-inv-equiv H ∙h htpy-conjugate-inv-equiv K
+  distributive-htpy-conjugate-inv-equiv-concat-htpy H K =
+    distributive-double-whisker-comp-concat
+      ( map-inv-equiv e)
+      ( H)
+      ( K)
+      ( map-equiv e)
+  
+  htpy²-conjugate-equiv :
+    {f g : A → A} {H K : f ~ g} → H ~ K → htpy-conjugate-equiv H ~ htpy-conjugate-equiv K
+  htpy²-conjugate-equiv J =
+    double-whisker-comp² (map-equiv e) J (map-inv-equiv e)  
+
+  htpy²-conjugate-inv-equiv :
+    {f g : B → B} {H K : f ~ g} → H ~ K → htpy-conjugate-inv-equiv H ~ htpy-conjugate-inv-equiv K
+  htpy²-conjugate-inv-equiv J =
+    double-whisker-comp² (map-inv-equiv e) J (map-equiv e)
+
+  module _
+      {f : A → A} {g : B → B}
+      where
+
+    transpose-conjugate-equiv :
+      (conjugate-equiv f ~ g) → (f ~ conjugate-inv-equiv g)
+    transpose-conjugate-equiv H =
+      ( inv-htpy (is-retraction-conjugate-inv-equiv-htpy f)) ∙h
+      ( htpy-conjugate-inv-equiv H)
+
+    transpose-conjugate-inv-equiv :
+      (f ~ conjugate-inv-equiv g) → (conjugate-equiv f ~ g)
+    transpose-conjugate-inv-equiv H =
+      ( htpy-conjugate-equiv H) ∙h
+      ( is-section-conjugate-inv-equiv-htpy g)
+
+{-    is-section-transpose-conjugate-inv-equiv-htpy :
+      (H : f ~ conjugate-inv-equiv g) →
+      (transpose-conjugate-equiv ∘ transpose-conjugate-inv-equiv) H ~ H
+    is-section-transpose-conjugate-inv-equiv-htpy H =
+      {!double-whisker-concat-htpy!} -- tricky
+
+    abstract
+      is-section-transpose-conjugate-inv-equiv :
+        {f : A → A} {g : B → B} →
+        {!transpose-conjugate-equiv ∘ transpose-conjugate-inv-equiv!} ~ id
+      is-section-transpose-conjugate-inv-equiv = {!!}-}
 ```
 
 ## See also

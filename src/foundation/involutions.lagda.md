@@ -136,6 +136,16 @@ module _
     Σ ( map-involution s ~ map-involution t)
       ( coherence-htpy-involution s t)
 
+  htpy-htpy-involution :
+    {s t : involution A} →
+    htpy-involution s t → (map-involution s) ~ (map-involution t)
+  htpy-htpy-involution = pr1
+
+  coherence-htpy-involution-htpy-involution :
+    {s t : involution A} → (H : htpy-involution s t) →
+    coherence-htpy-involution s t (htpy-htpy-involution H)
+  coherence-htpy-involution-htpy-involution = pr2  
+
   refl-htpy-involution : (s : involution A) → htpy-involution s s
   pr1 (refl-htpy-involution s) = refl-htpy
   pr2 (refl-htpy-involution s) = refl-htpy
@@ -221,40 +231,52 @@ module _
   coherence-is-involution = f ·l H ~ H ·r f
 ```
 
-### We can obtain an involution on a type equivalent to a type equipped with an involution
+### Equivalences act by conjugation on involutions
 
 ```agda
-involution-equiv-involution :
-  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) →
-  involution A → involution X
-pr1 (involution-equiv-involution A X e f) =
-  (map-equiv e) ∘ (map-involution f) ∘ (map-inv-equiv e)
-pr2 (involution-equiv-involution A X e f) = 
-  ( double-whisker-comp
-    ( map-equiv e ∘ map-involution f)
-    ( is-retraction-map-inv-equiv e)
-    ( map-involution f ∘ map-inv-equiv e)) ∙h
-  ( double-whisker-comp
-    ( map-equiv e)
-    ( is-involution-map-involution f)
-    ( map-inv-equiv e)) ∙h
-  ( is-section-map-inv-equiv e)
-
-involution-equiv-involution' :
-  {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) →
-  involution X → involution A
-pr1 (involution-equiv-involution' A X e f) =
-  (map-inv-equiv e) ∘ (map-involution f) ∘ (map-equiv e)
-pr2 (involution-equiv-involution' A X e f) = 
-  ( double-whisker-comp
-    ( map-inv-equiv e ∘ map-involution f)
+module _
+  {l1 l2 : Level} {A : UU l1} {X : UU l2} (e : A ≃ X)
+  where
+  
+  conjugate-equiv-involution :
+    involution A → involution X
+  pr1 (conjugate-equiv-involution f) =
+    conjugate-equiv e (map-involution f)
+  pr2 (conjugate-equiv-involution f) =
+    ( inv-htpy
+      ( distributive-conjugate-equiv-comp
+        ( e)
+        ( map-involution f)
+        ( map-involution f))) ∙h
+    ( htpy-conjugate-equiv e (is-involution-map-involution f)) ∙h
     ( is-section-map-inv-equiv e)
-    ( map-involution f ∘ map-equiv e)) ∙h
-  ( double-whisker-comp
-    ( map-inv-equiv e)
-    ( is-involution-map-involution f)
-    ( map-equiv e)) ∙h
-  ( is-retraction-map-inv-equiv e)
+
+  htpy-conjugate-equiv-involution :
+    {f g : involution A} → htpy-involution f g →
+    htpy-involution
+      ( conjugate-equiv-involution f)
+      ( conjugate-equiv-involution g)
+  pr1 (htpy-conjugate-equiv-involution H) =
+    htpy-conjugate-equiv e  (htpy-htpy-involution H)
+  pr2 (htpy-conjugate-equiv-involution H) =
+    {!!}
+
+  conjugate-inv-equiv-involution :
+    involution X → involution A
+  pr1 (conjugate-inv-equiv-involution f) =
+    (map-inv-equiv e) ∘ (map-involution f) ∘ (map-equiv e)
+  pr2 (conjugate-inv-equiv-involution f) =
+    (inv-htpy
+      ( distributive-conjugate-inv-equiv-comp
+        ( e)
+        ( map-involution f)
+        ( map-involution f))) ∙h
+    ( htpy-conjugate-inv-equiv e (is-involution-map-involution f)) ∙h
+    ( is-retraction-map-inv-equiv e)
+
+  htpy-conjugate-inv-equiv-involution :
+    {!!}
+  htpy-conjugate-inv-equiv-involution = {!!}
 ```
 
 ### The above process preserves ___
@@ -263,9 +285,25 @@ pr2 (involution-equiv-involution' A X e f) =
 contraction-involution-equiv-contraction-involution :
   {l1 l2 : Level} (A : UU l1) (X : UU l2) (e : A ≃ X) (f : involution A)
   (H : (g : involution A) → htpy-involution f g) →
-  (g : involution X) → htpy-involution (involution-equiv-involution A X e f) g
-pr1 (contraction-involution-equiv-contraction-involution A X e f H g) = {!!}
-pr2 (contraction-involution-equiv-contraction-involution A X e f H g) = {!!}
+  (g : involution X) → htpy-involution (conjugate-equiv-involution e f) g
+pr1 (contraction-involution-equiv-contraction-involution A X e f H g) =
+  {!transpose-conjugate-inv-equiv e (H (conjugate-inv-equiv-involution e g))!} --
+pr2 (contraction-involution-equiv-contraction-involution A X e f H g) =
+  {!( coherence-htpy-involution-htpy-involution (H (conjugate-inv-equiv-involution A X e g)))!}
+
+{-  ( double-whisker-comp
+    ( map-equiv e)
+    ( htpy-htpy-involution (H (conjugate-inv-equiv-involution A X e g)))
+    ( map-inv-equiv e)) ∙h
+  ( right-whisker-comp
+    ( is-section-map-inv-equiv e)
+    ( map-involution g ∘ map-equiv e ∘ map-inv-equiv e)) ∙h
+  ( left-whisker-comp
+    ( map-involution g)
+    ( is-section-map-inv-equiv e))-}
+
+
+
 {-  is-injective-equiv
     ( equiv-precomp e X)
     ( is-injective-equiv
@@ -273,7 +311,7 @@ pr2 (contraction-involution-equiv-contraction-involution A X e f H g) = {!!}
       ( ( eq-htpy
         ( ( left-whisker-comp (map-inv-equiv e ∘ map-equiv e ∘ map-involution f) (is-retraction-map-inv-equiv e)) ∙h
         ( right-whisker-comp (is-retraction-map-inv-equiv e) (map-involution f)))) ∙
-      ( ( H (involution-equiv-involution' A X e g)))))-}
+      ( ( H (conjugate-inv-equiv-involution A X e g)))))-}
 ```
  
 ### Fixed point free involutions
@@ -333,7 +371,7 @@ module _
 fixed-point-free-involution-equiv-fixed-point-free-involution :
   {l1 l2 : Level} (A : UU l1) (X : UU l2) (e :  A ≃ X) → fixed-point-free-involution A → fixed-point-free-involution X
 pr1 (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f) =
-  involution-equiv-involution A X e (involution-fixed-point-free-involution f)
+  conjugate-equiv-involution e (involution-fixed-point-free-involution f)
 pr2 (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f) x t =
   is-fixed-point-free-involution-fixed-point-free-involution
     ( f)
@@ -343,7 +381,7 @@ pr2 (fixed-point-free-involution-equiv-fixed-point-free-involution A X e f) x t 
 fixed-point-free-involution-equiv-fixed-point-free-involution' : 
     {l1 l2 : Level} (A : UU l1) (X : UU l2) (e :  A ≃ X) → fixed-point-free-involution X → fixed-point-free-involution A
 pr1 (fixed-point-free-involution-equiv-fixed-point-free-involution' A X e f) = 
-  involution-equiv-involution' A X e (involution-fixed-point-free-involution f)
+  conjugate-inv-equiv-involution e (involution-fixed-point-free-involution f)
 pr2 (fixed-point-free-involution-equiv-fixed-point-free-involution' A X e f) x t =
   is-fixed-point-free-involution-fixed-point-free-involution
     ( f)
