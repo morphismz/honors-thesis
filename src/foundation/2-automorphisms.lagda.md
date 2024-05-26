@@ -30,7 +30,10 @@ A one dimensional automorphism, or just [automorphism](foundation.automorphisms.
 of a type `X` is an [equivalence](foundation.equivalences.md) `X ≃ X`.
 A two dimensional automorphism, or just 2-automorphism, of a type `X`
 is a homotopy `id {A = X} ~ id` from the identitity function on `X` to itself.
-The type of 2-automorphisms of `X` is equivalent to `Ω² (UU , X)`,
+
+
+Type type of 2-automorphisms is naturally a pointed type with base point
+`refl-htpy`. By [univalence](foundation.univalence.md), this pointed type of 2-automorphisms of `X` is equivalent to `Ω² (UU , X)`,
 the [double loop space](synthetic-homotopy-theory.double-loop-spaces.md)
 of the universe based at `X`.
 
@@ -46,6 +49,11 @@ module _
   type-2-automorphism X = type-iterated-automorphism 2 X
 
   refl-htpy-2-automorphism :
-    (X : UU l) → type-2-automorphism X
-  refl-htpy-2-automorphism X = iterated-refl-htpy 1
+    {X : UU l} → type-2-automorphism X
+  refl-htpy-2-automorphism = iterated-refl-htpy 1
+
+  2-automorphism :
+    UU l → Pointed-Type l
+  pr1 (2-automorphism X) = type-2-automorphism X
+  pr2 (2-automorphism X) = refl-htpy-2-automorphism
 ```
