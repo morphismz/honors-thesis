@@ -19,23 +19,23 @@ open import foundation.iterated-automorphisms
 open import foundation.universe-levels
 
 open import structured-types.pointed-types
-
 ```
 
 </details>
 
 ## Idea
 
-A one dimensional automorphism, or just [automorphism](foundation.automorphisms.md),
-of a type `X` is an [equivalence](foundation.equivalences.md) `X ≃ X`.
-A two dimensional automorphism, or just 2-automorphism, of a type `X`
-is a homotopy `id {A = X} ~ id` from the identitity function on `X` to itself.
-
+A one dimensional automorphism, or just
+[automorphism](foundation.automorphisms.md), of a type `X` is an
+[equivalence](foundation.equivalences.md) `X ≃ X`. A two dimensional
+automorphism, or just 2-automorphism, of a type `X` is a homotopy
+`id {A = X} ~ id` from the identitity function on `X` to itself.
 
 Type type of 2-automorphisms is naturally a pointed type with base point
-`refl-htpy`. By [univalence](foundation.univalence.md), this pointed type of 2-automorphisms of `X` is equivalent to `Ω² (UU , X)`,
-the [double loop space](synthetic-homotopy-theory.double-loop-spaces.md)
-of the universe based at `X`.
+`refl-htpy`. By [univalence](foundation.univalence.md), this pointed type of
+2-automorphisms of `X` is equivalent to `Ω² (UU , X)`, the
+[double loop space](synthetic-homotopy-theory.double-loop-spaces.md) of the
+universe based at `X`.
 
 ## Definitions
 
@@ -43,10 +43,10 @@ of the universe based at `X`.
 module _
   {l : Level}
   where
-  
+
   type-2-automorphism :
     UU l → UU l
-  type-2-automorphism X = type-iterated-automorphism 2 X
+  type-2-automorphism X = iterated-automorphism 1 X
 
   refl-htpy-2-automorphism :
     {X : UU l} → type-2-automorphism X

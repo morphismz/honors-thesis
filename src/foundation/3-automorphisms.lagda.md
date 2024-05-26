@@ -1,4 +1,4 @@
-# 2-automorphisms
+# 3-automorphisms
 
 ```agda
 module foundation.3-automorphisms where
@@ -19,7 +19,6 @@ open import foundation.iterated-automorphisms
 open import foundation.universe-levels
 
 open import structured-types.pointed-types
-
 ```
 
 </details>
@@ -27,19 +26,19 @@ open import structured-types.pointed-types
 ## Idea
 
 A one dimensional automorphism, or [automorphism](foundation.automorphisms.md),
-of a type `X` is an [equivalence](foundation.equivalences.md) `X ≃ X`.
-A two dimensional automorphism, or [2-automorphism](foundation.2-automorphism.md), of a type `X`
-is a homotopy `H : id {A = X} ~ id` from the identitity function on `X` to itself.
-A three dimensional automorphism, or 3-automorphism, is a homotopy
-`H : refl-htpy {f = id} ~ refl-htpy` from the trival homotopy on the identity
-function to itself.
+of a type `X` is an [equivalence](foundation.equivalences.md) `X ≃ X`. A two
+dimensional automorphism, or [2-automorphism](foundation.2-automorphisms.md), of
+a type `X` is a homotopy `H : id {A = X} ~ id` from the identitity function on
+`X` to itself. A three dimensional automorphism, or 3-automorphism, is a
+homotopy `H : refl-htpy {f = id} ~ refl-htpy` from the trival homotopy on the
+identity function to itself.
 
 The type of 3-automorphisms is naturally a pointed-type with base point
-`refl-htpy {f = refl-htpy}`, or `iterated-refl-htpy 2`.
-By [univalence](foundation.univalence.md), this pointed type of
-3-automorphisms of `X` is equivalent to `Ω³ (UU , X)`,
-the [triple loop space](synthetic-homotopy-theory.triple-loop-spaces.md)
-of the universe based at `X`.
+`refl-htpy {f = refl-htpy}`, or `iterated-refl-htpy 2`. By
+[univalence](foundation.univalence.md), this pointed type of 3-automorphisms of
+`X` is equivalent to `Ω³ (UU , X)`, the
+[triple loop space](synthetic-homotopy-theory.triple-loop-spaces.md) of the
+universe based at `X`.
 
 ## Definitions
 
@@ -50,7 +49,7 @@ module _
 
   type-3-automorphism :
     UU l → UU l
-  type-3-automorphism X = type-iterated-automorphism 3 X
+  type-3-automorphism X = iterated-automorphism 2 X
 
   refl-htpy-3-automorphism :
     {X : UU l} → type-3-automorphism X

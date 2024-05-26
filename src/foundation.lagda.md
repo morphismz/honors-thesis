@@ -13,7 +13,9 @@ open import foundation.0-connected-types public
 open import foundation.0-images-of-maps public
 open import foundation.0-maps public
 open import foundation.1-types public
+open import foundation.2-automorphisms public
 open import foundation.2-types public
+open import foundation.3-automorphisms public
 open import foundation.action-on-equivalences-functions public
 open import foundation.action-on-equivalences-functions-out-of-subuniverses public
 open import foundation.action-on-equivalences-type-families public
@@ -229,6 +231,7 @@ open import foundation.invertible-maps public
 open import foundation.involutions public
 open import foundation.isolated-elements public
 open import foundation.isomorphisms-of-sets public
+open import foundation.iterated-automorphisms public
 open import foundation.iterated-cartesian-product-types public
 open import foundation.iterated-dependent-pair-types public
 open import foundation.iterated-dependent-product-types public
