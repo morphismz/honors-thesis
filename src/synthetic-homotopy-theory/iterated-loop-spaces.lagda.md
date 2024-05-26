@@ -39,6 +39,14 @@ module _
 
   iterated-loop-space : ℕ → Pointed-Type l → Pointed-Type l
   iterated-loop-space n = iterate n Ω
+
+  type-iterated-loop-space : ℕ → Pointed-Type l → UU l
+  type-iterated-loop-space n X =
+    type-Pointed-Type (iterated-loop-space n X)
+
+  iterated-refl-Ω :
+    (n : ℕ) {X : Pointed-Type l} → type-iterated-loop-space n X
+  iterated-refl-Ω n {X} = point-Pointed-Type (iterated-loop-space n X)
 ```
 
 ### Iterated loop spaces of H-spaces
