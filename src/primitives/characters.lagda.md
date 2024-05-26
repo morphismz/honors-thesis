@@ -36,3 +36,12 @@ primitive
   primNatToChar : ℕ → Char
   primCharEquality : Char → Char → bool
 ```
+
+We can use these primitives to define othe functions
+
+### Turn a digit into a natural number
+
+```agda {-
+nat-Digit : (c : Char) → type-prop-bool (primIsDigit c) → ℕ
+nat-Digit c t = {!!}
+-}```

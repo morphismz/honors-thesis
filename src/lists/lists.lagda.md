@@ -7,6 +7,8 @@ module lists.lists where
 <details><summary>Imports</summary>
 
 ```agda
+open import elementary-number-theory.equality-natural-numbers
+open import elementary-number-theory.inequality-natural-numbers
 open import elementary-number-theory.natural-numbers
 
 open import foundation.action-on-higher-identifications-functions
@@ -56,6 +58,10 @@ data list {l : Level} (A : UU l) : UU l where
 ```agda
 is-nil-list : {l : Level} {A : UU l} → list A → UU l
 is-nil-list l = (l ＝ nil)
+
+is-nil-list' : {l : Level} {A : UU l} → list A → UU lzero
+is-nil-list' nil = unit
+is-nil-list' (cons x l) = empty
 
 is-nonnil-list : {l : Level} {A : UU l} → list A → UU l
 is-nonnil-list l = ¬ (is-nil-list l)
@@ -319,6 +325,13 @@ last-element-list :
 last-element-list nil = nil
 last-element-list (cons a nil) = unit-list a
 last-element-list (cons a (cons b x)) = last-element-list (cons b x)
+
+last-element-nonnil-list :
+  {l1 : Level} {A : UU l1} (x : list A) → is-nonnil-list x → A
+last-element-nonnil-list nil t = ind-empty (t refl)
+last-element-nonnil-list (cons a nil) t = a
+last-element-nonnil-list (cons a (cons b x)) t =
+  last-element-nonnil-list (cons a x) (is-nonnil-cons-list a x)
 ```
 
 ### Removing the last element of a list
@@ -332,6 +345,50 @@ remove-last-element-list (cons a (cons b x)) =
   cons a (remove-last-element-list (cons b x))
 ```
 
+### Replace the last element of a list
+
+```agda
+replace-last-element-list :
+  {l1 : Level} {A : UU l1} → A → list A → list A
+replace-last-element-list a nil = nil
+replace-last-element-list a (cons b nil) = cons a nil
+replace-last-element-list a (cons b (cons c x)) =
+  cons b (replace-last-element-list a (cons c x))
+```
+
+### Return an element of a list
+
+TO DO -- think how best to do this
+
+### Remove an element of a list
+
+### Replace an element of a list
+
+This function takes three arguments: a natural number `n`, a element `a`,
+and a list `x`. The function replaces the n-th element of `x` with `a`.
+If `n` is greater than the length of the list, no element is changed.
+
+```agda
+replace-element-list :
+  {l1 : Level} {A : UU l1} → ℕ → A → list A → list A
+replace-element-list n a nil = nil
+replace-element-list zero-ℕ a (cons b x) = cons a x
+replace-element-list (succ-ℕ n) a (cons b x) =
+  replace-element-list n a x
+```
+
+### Replacing a list of elements of a list
+
+```agda
+replace-list-of-elements-list :
+  {l1 : Level} {A : UU l1} → list (ℕ × A) → list A → list A
+replace-list-of-elements-list nil x = x
+replace-list-of-elements-list (cons (n , a) l) x =
+  replace-element-list n a (replace-list-of-elements-list l x)
+```
+nil = nil
+replace-list-of-elements-list nil (cons a x) = {!(cons a x)!}
+replace-list-of-elements-list (cons x₁ l) (cons a x) = {!!}
 ### Properties of heads and tails and their duals
 
 ```agda
@@ -391,3 +448,36 @@ is-equiv-map-algebra-list A =
     ( is-section-map-inv-algebra-list A)
     ( is-retraction-map-inv-algebra-list A)
 ```
+
+### Turn a natural number into a list of digits base 10
+
+```agda
+interleaved mutual
+
+  list-digits-nat : ℕ → list ℕ
+  is-nonnil-list-digits-nat : (n : ℕ) → is-nonnil-list (list-digits-nat n)
+  
+  list-digits-nat zero-ℕ = unit-list 0
+  list-digits-nat (succ-ℕ n) =
+    rec-coproduct
+      ( λ t →
+        replace-list-of-elements-list
+          ( {!(length-list (remove-last-element-list (list-digits-nat n)) , ?)!})
+          ( {!!}))
+      ( λ t →
+        replace-last-element-list
+          ( succ-ℕ
+            ( last-element-nonnil-list
+              ( list-digits-nat n)
+              ( is-nonnil-list-digits-nat n)))
+          ( list-digits-nat n))
+      ( has-decidable-equality-ℕ
+        ( 9)
+        ( last-element-nonnil-list
+          ( list-digits-nat n)
+          ( is-nonnil-list-digits-nat n)))
+
+  is-nonnil-list-digits-nat zero-ℕ = is-nonnil-cons-list 0 nil
+  is-nonnil-list-digits-nat (succ-ℕ n) = {!!}
+```
+

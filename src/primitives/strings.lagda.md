@@ -45,3 +45,11 @@ primitive
   primShowString : String → String
   primShowNat : ℕ → String
 ```
+
+### Turn a natural number into a string
+
+```agda
+String-nat : ℕ → String
+String-nat zero-ℕ = "0"
+String-nat (succ-ℕ n) = {!!}
+```
