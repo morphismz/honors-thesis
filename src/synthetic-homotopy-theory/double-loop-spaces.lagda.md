@@ -12,6 +12,7 @@ open import foundation.commuting-squares-of-identifications
 open import foundation.dependent-pair-types
 open import foundation.identity-types
 open import foundation.path-algebra
+open import foundation.transport-along-identifications
 open import foundation.universe-levels
 open import foundation.whiskering-identifications-concatenation
 
@@ -137,4 +138,26 @@ module _
     Ω (point-Pointed-Type A ＝ x , p) ≃∗ Ω² A
   pointed-equiv-2-loop-pointed-identity =
     pointed-equiv-Ω-pointed-equiv (pointed-equiv-loop-pointed-identity A p)
+```
+
+### Computing transport in the family of double loop spaces
+
+```agda
+module _
+  {l : Level} {X : UU l} {x y : X}
+  where
+
+  map-tr-Ω² :
+    (p : x ＝ y) → type-Ω² x → type-Ω² y
+  map-tr-Ω² p α =
+    ( inv (left-inv p) ∙ (double-whisker-concat' (inv p) α p) ∙ left-inv p)
+
+  tr-Ω² :
+    (p : x ＝ y) (α : type-Ω² x) →
+    tr type-Ω² p α ＝ map-tr-Ω² p α
+  tr-Ω² refl α =
+    ( inv
+      ( ( left-unit-law-left-whisker-Ω² (right-whisker-concat α refl)) ∙
+      ( right-unit-law-right-whisker-Ω² α))) ∙
+    ( inv right-unit)
 ```

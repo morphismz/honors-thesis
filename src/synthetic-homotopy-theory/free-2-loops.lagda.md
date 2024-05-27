@@ -19,11 +19,13 @@ open import foundation.structure-identity-principle
 open import foundation.torsorial-type-families
 open import foundation.transport-along-identifications
 open import foundation.universe-levels
+open import foundation.whiskering-identifications-concatenation
 
 open import structured-types.pointed-types
 
 open import synthetic-homotopy-theory.dependent-2-loops
 open import synthetic-homotopy-theory.double-loop-spaces
+open import synthetic-homotopy-theory.loop-spaces
 ```
 
 </details>
@@ -63,25 +65,46 @@ module _
 
 ```agda
 module _
-  {l1 l2 : Level} {X : Pointed-Type l1} (B : type-Pointed-Type X → UU l2)
-  (α : type-Ω² (point-Pointed-Type X))
+  {l1 l2 : Level} {X : UU l1} (α : free-2-loop X)
+  (B : X → UU l2)
   where
 
   free-dependent-2-loop : UU l2
   free-dependent-2-loop =
-    Σ (B (point-Pointed-Type X)) (λ b → dependent-2-loop (B , b) α )
+    Σ (B (base-free-2-loop α)) (λ b → dependent-2-loop (B , b) (2-loop-free-2-loop α))
 
 module _
-  {l1 l2 : Level} {X : Pointed-Type l1} {B : type-Pointed-Type X → UU l2}
-  {α : type-Ω² (point-Pointed-Type X)}
+  {l1 l2 : Level} {X : UU l1} {B : X → UU l2}
+  {α : free-2-loop X}
   where
 
   base-free-dependent-2-loop :
-    free-dependent-2-loop B α → B (point-Pointed-Type X)
+    free-dependent-2-loop α B → B (base-free-2-loop α)
   base-free-dependent-2-loop = pr1
 
   dependent-2-loop-free-dependent-2-loop :
-    (β : free-dependent-2-loop B α) →
-    dependent-2-loop (B , base-free-dependent-2-loop β) α
+    (β : free-dependent-2-loop α B) →
+    dependent-2-loop (B , base-free-dependent-2-loop β) (2-loop-free-2-loop α)
   dependent-2-loop-free-dependent-2-loop = pr2
+```
+
+## Properties
+
+### Characterization of the identity type of the type of free 2-loops
+
+```agda
+module _
+  {l : Level} {X : UU l}
+  where
+
+  Eq-free-2-loop : (α α' : free-2-loop X) → UU l
+  Eq-free-2-loop α α' =
+    Σ (base-free-2-loop α ＝ base-free-2-loop α')
+      ( λ p →
+        map-tr-Ω² p (2-loop-free-2-loop α) ＝ 2-loop-free-2-loop α')
+
+  refl-Eq-free-loop : (α : free-2-loop X) → Eq-free-2-loop α α
+  pr1 (refl-Eq-free-loop α) = refl
+  pr2 (refl-Eq-free-loop α) = inv (tr-Ω² refl (2-loop-free-2-loop α))
+    
 ```
