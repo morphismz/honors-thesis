@@ -41,6 +41,11 @@ apd :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) {x y : A}
   (p : x ＝ y) → dependent-identification B p (f x) (f y)
 apd f refl = refl
+
+apd² :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) {x y : A}
+  {p q : x ＝ y} (α : p ＝ q) → dependent-identification² B α (apd f p) (apd f q)
+apd² f α = apd (apd f) α
 ```
 
 ## See also

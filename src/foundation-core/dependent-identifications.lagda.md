@@ -64,4 +64,19 @@ module _
     UU l2
   dependent-identification² α {x'} {y'} p' q' =
     dependent-identification (λ t → dependent-identification B t x' y') α p' q'
+
+  dependent-identification³ :
+    {x y : A} {p q : x ＝ y} {α β : p ＝ q} (γ : α ＝ β)
+    {x' : B x} {y' : B y} {p' : dependent-identification B p x' y'}
+    {q' : dependent-identification B q x' y'}
+    (α' : dependent-identification² α p' q')
+    (β' : dependent-identification² β p' q') →
+    UU l2
+  dependent-identification³ γ {p' = p'} {q' = q'} α' β' =
+    dependent-identification
+      (λ t → dependent-identification² t p' q')
+      ( γ)
+      ( α')
+      ( β')
+    
 ```

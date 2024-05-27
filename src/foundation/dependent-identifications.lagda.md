@@ -19,6 +19,7 @@ open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
 open import foundation-core.transport-along-identifications
+open import foundation-core.whiskering-identifications-concatenation
 ```
 
 </details>
@@ -44,8 +45,8 @@ module _
     (p' : dependent-identification B p x' y')
     (q' : dependent-identification B q x' y') →
     p' ＝ tr² B α x' ∙ q' → dependent-identification² B α p' q'
-  map-compute-dependent-identification² refl ._ refl refl =
-    refl
+  map-compute-dependent-identification² refl p' q' α' =
+    α'
 
   map-inv-compute-dependent-identification² :
     {x y : A} {p q : x ＝ y} (α : p ＝ q)
@@ -53,28 +54,28 @@ module _
     (p' : dependent-identification B p x' y')
     (q' : dependent-identification B q x' y') →
     dependent-identification² B α p' q' → p' ＝ tr² B α x' ∙ q'
-  map-inv-compute-dependent-identification² refl refl ._ refl =
-    refl
+  map-inv-compute-dependent-identification² refl p' q' α' = α'
 
-  is-section-map-inv-compute-dependent-identification² :
-    {x y : A} {p q : x ＝ y} (α : p ＝ q)
-    {x' : B x} {y' : B y}
-    (p' : dependent-identification B p x' y')
-    (q' : dependent-identification B q x' y') →
-    ( map-compute-dependent-identification² α p' q' ∘
-      map-inv-compute-dependent-identification² α p' q') ~ id
-  is-section-map-inv-compute-dependent-identification² refl refl ._ refl =
-    refl
+  abstract
+    is-section-map-inv-compute-dependent-identification² :
+      {x y : A} {p q : x ＝ y} (α : p ＝ q)
+      {x' : B x} {y' : B y}
+      (p' : dependent-identification B p x' y')
+      (q' : dependent-identification B q x' y') →
+      ( map-compute-dependent-identification² α p' q' ∘
+        map-inv-compute-dependent-identification² α p' q') ~ id
+    is-section-map-inv-compute-dependent-identification² refl refl ._ refl =
+      refl
 
-  is-retraction-map-inv-compute-dependent-identification² :
-    {x y : A} {p q : x ＝ y} (α : p ＝ q)
-    {x' : B x} {y' : B y}
-    (p' : dependent-identification B p x' y')
-    (q' : dependent-identification B q x' y') →
-    ( map-inv-compute-dependent-identification² α p' q' ∘
-      map-compute-dependent-identification² α p' q') ~ id
-  is-retraction-map-inv-compute-dependent-identification² refl ._ refl refl =
-    refl
+    is-retraction-map-inv-compute-dependent-identification² :
+      {x y : A} {p q : x ＝ y} (α : p ＝ q)
+      {x' : B x} {y' : B y}
+      (p' : dependent-identification B p x' y')
+      (q' : dependent-identification B q x' y') →
+      ( map-inv-compute-dependent-identification² α p' q' ∘
+        map-compute-dependent-identification² α p' q') ~ id
+    is-retraction-map-inv-compute-dependent-identification² refl ._ refl refl =
+      refl
 
   is-equiv-map-compute-dependent-identification² :
     {x y : A} {p q : x ＝ y} (α : p ＝ q)
@@ -98,6 +99,27 @@ module _
     map-compute-dependent-identification² α p' q'
   pr2 (compute-dependent-identification² α p' q') =
     is-equiv-map-compute-dependent-identification² α p' q'
+```
+
+### Computing thrice iterated dependent identifications
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2)
+  where
+
+  map-compute-dependent-identification³ :
+    {x y : A} {p q : x ＝ y} {α β : p ＝ q} (γ : α ＝ β)
+    {x' : B x} {y' : B y} {p' : dependent-identification B p x' y'}
+    {q' : dependent-identification B q x' y'}
+    (α' : dependent-identification² B α p' q')
+    (β' : dependent-identification² B β p' q') →
+    (  ( map-inv-compute-dependent-identification² B α p' q' α') ∙
+    ( right-whisker-concat (tr³ B γ x') q') ＝
+    ( ( map-inv-compute-dependent-identification² B β p' q' β'))) →
+    dependent-identification³ B γ α' β'
+  map-compute-dependent-identification³ {p = refl} {α = refl} refl α' β' γ' =
+    inv right-unit ∙ γ'
 ```
 
 ### The groupoidal structure of dependent identifications
