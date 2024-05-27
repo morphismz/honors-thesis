@@ -13,6 +13,8 @@ open import foundation.action-on-identifications-dependent-functions
 open import foundation.action-on-identifications-functions
 open import foundation.dependent-identifications
 open import foundation.dependent-pair-types
+open import foundation.embeddings
+open import foundation.equivalences
 open import foundation.transport-along-identifications
 open import foundation.type-arithmetic-dependent-pair-types
 open import foundation.universe-levels
@@ -20,7 +22,7 @@ open import foundation.universe-levels
 open import foundation-core.equivalences
 open import foundation-core.function-types
 open import foundation-core.functoriality-dependent-pair-types
-open import foundation-core.identity-types
+open import foundation.identity-types
 ```
 
 </details>
@@ -233,6 +235,32 @@ module _
     ( ap (λ q → tr C q (pr1 (pr2 (pr2 s)))) (coh-eq-base-Σ³ p)) ∙
     ( dependent-eq-second-component-eq-Σ²
       ( ap (map-equiv (interchange-Σ-Σ-Σ D)) p))
+```
+
+
+### Computing 2-dimensional identifications
+
+```agda
+module _
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  where
+
+  Eq²-Σ :
+    {s t : Σ A B} (p q : Eq-Σ s t) → UU (l1 ⊔ l2)
+  Eq²-Σ (p , p') (q , q') =
+    Σ (p ＝ q) (λ α → dependent-identification² B α p' q')
+
+  equiv-eq²-pair-Σ :
+    {s t : Σ A B} (p q : Eq-Σ s t) →
+    (Eq²-Σ p q) ≃ (eq-pair-Σ' p ＝ eq-pair-Σ' q)
+  equiv-eq²-pair-Σ {s} {t} p q =
+    equiv-ap (equiv-eq-pair-Σ s t) p q ∘e (equiv-eq-pair-Σ p q)
+
+  equiv-pair-eq²-Σ :
+    {s t : Σ A B} (p q : s ＝ t) →
+    (p ＝ q) ≃ (Eq²-Σ (pair-eq-Σ p) (pair-eq-Σ q))
+  equiv-pair-eq²-Σ {s} {t} p q =
+    equiv-pair-eq-Σ (pair-eq-Σ p) (pair-eq-Σ q) ∘e equiv-ap (equiv-pair-eq-Σ s t) p q
 ```
 
 ## See also

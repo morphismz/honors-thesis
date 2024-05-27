@@ -11,6 +11,7 @@ open import foundation.action-on-identifications-functions
 open import foundation.constant-type-families
 open import foundation.contractible-types
 open import foundation.dependent-pair-types
+open import foundation.equality-dependent-pair-types
 open import foundation.equivalences
 open import foundation.functoriality-dependent-pair-types
 open import foundation.fundamental-theorem-of-identity-types
@@ -107,4 +108,34 @@ module _
   pr1 (refl-Eq-free-loop α) = refl
   pr2 (refl-Eq-free-loop α) = inv (tr-Ω² refl (2-loop-free-2-loop α))
     
+```
+
+### A free dependent 2-loop determine a free 2-loop in the total space
+
+```agda
+module _
+  {l1 l2 : Level} {X : UU l1} {B : X → UU l2}
+  (α : free-2-loop X) (β : free-dependent-2-loop α B)
+  where
+
+  Eq²-Σ-free-dependent-2-loop :
+    Eq²-Σ
+      ( refl-Eq-Σ {B = B} (base-free-2-loop α , base-free-dependent-2-loop β))
+      ( refl-Eq-Σ (base-free-2-loop α , base-free-dependent-2-loop β))
+  pr1 Eq²-Σ-free-dependent-2-loop = 2-loop-free-2-loop α
+  pr2 Eq²-Σ-free-dependent-2-loop =
+    map-inv-equiv
+      ( compute-dependent-2-loop
+        ( B , base-free-dependent-2-loop β)
+        ( 2-loop-free-2-loop α))
+      ( dependent-2-loop-free-dependent-2-loop β)
+
+  free-2-loop-total-space-free-dependent-2-loop :
+    free-2-loop (Σ X B)
+  pr1 (pr1 free-2-loop-total-space-free-dependent-2-loop) =
+    base-free-2-loop α
+  pr2 (pr1 free-2-loop-total-space-free-dependent-2-loop) =
+    base-free-dependent-2-loop β
+  pr2 free-2-loop-total-space-free-dependent-2-loop =
+    map-inv-equiv (equiv-pair-eq²-Σ refl refl) Eq²-Σ-free-dependent-2-loop
 ```
