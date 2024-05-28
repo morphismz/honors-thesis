@@ -92,6 +92,7 @@ tr-ap :
 tr-ap f g refl z = refl
 ```
 
+
 ### Computing maps out of identity types as transports
 
 ```agda

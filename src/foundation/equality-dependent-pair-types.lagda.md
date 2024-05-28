@@ -260,7 +260,8 @@ module _
     {s t : Σ A B} (p q : s ＝ t) →
     (p ＝ q) ≃ (Eq²-Σ (pair-eq-Σ p) (pair-eq-Σ q))
   equiv-pair-eq²-Σ {s} {t} p q =
-    equiv-pair-eq-Σ (pair-eq-Σ p) (pair-eq-Σ q) ∘e equiv-ap (equiv-pair-eq-Σ s t) p q
+    ( equiv-pair-eq-Σ (pair-eq-Σ p) (pair-eq-Σ q)) ∘e
+    ( equiv-ap (equiv-pair-eq-Σ s t) p q)
 ```
 
 ## See also

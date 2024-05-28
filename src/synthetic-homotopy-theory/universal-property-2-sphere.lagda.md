@@ -111,3 +111,34 @@ module _
   dependent-universal-property-2-sphere =
     {l2 : Level} (P : X → UU l2) → is-equiv (ev-free-2-loop-∏ α P)
 ```
+
+## Properties
+
+### Evaluating a free 2-loop into a type of dependent pairs factors through evaluating a free dependent-2-loop
+
+```agda
+module _
+  {l1 l2 : Level} {X : UU l1} (α : free-2-loop X) (P : X → UU l2)
+  (f : (x : X) → P x)
+  where
+
+  triangle-ev-free-2-loop-∏ :
+    {!pr2 (map-inv-equiv (compute-free-2-loop-Σ P) (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x))))!} ＝ {!ev-free-2-loop-∏ α P f!}
+  triangle-ev-free-2-loop-∏ = {!is-retraction-map-inv-equiv (compute-free-2-loop-Σ P) !}
+```
+
+### The universal property of the 2-sphere implies the dependet universal property of the 2-sphere
+
+```agda
+module _
+  {l1 : Level} {X : UU l1} (α : free-2-loop X)
+  (u : universal-property-2-sphere α)
+  where
+
+  dependent-universal-property-2-sphere-universal-property-2-sphere :
+    dependent-universal-property-2-sphere α
+  dependent-universal-property-2-sphere-universal-property-2-sphere =
+    λ P → {! !}
+
+```
+
