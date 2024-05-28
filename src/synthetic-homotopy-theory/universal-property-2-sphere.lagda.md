@@ -13,7 +13,9 @@ open import foundation.action-on-identifications-functions
 open import foundation.constant-type-families
 open import foundation.contractible-maps
 open import foundation.contractible-types
+open import foundation.dependent-identifications
 open import foundation.dependent-pair-types
+open import foundation.equality-dependent-pair-types
 open import foundation.equivalences
 open import foundation.fibers-of-maps
 open import foundation.function-extensionality
@@ -122,9 +124,18 @@ module _
   (f : (x : X) → P x)
   where
 
-  triangle-ev-free-2-loop-∏ :
-    {!pr2 (map-inv-equiv (compute-free-2-loop-Σ P) (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x))))!} ＝ {!ev-free-2-loop-∏ α P f!}
-  triangle-ev-free-2-loop-∏ = {!is-retraction-map-inv-equiv (compute-free-2-loop-Σ P) !}
+  t :
+    (ap² (λ x → x , f x) (pr2 α)) ＝ 
+    (map-inv-equiv (equiv-pair-eq²-Σ refl refl)
+    (Eq²-Σ-free-dependent-2-loop (α , ev-free-2-loop-∏ α P f)))
+  t = {!!}
+
+  test :
+    pr1 (map-inv-equiv (compute-free-2-loop-Σ P) (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x)))) ＝ α
+  test = eq-pair-Σ {!pr1 (pr1 (ev-free-2-loop α (Σ X P) (λ x → x , f x)))!} {!!}
+
+  test' : (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x))) ＝ map-compute-free-2-loop-Σ (α , (ev-free-2-loop-∏ α P f))
+  test' = eq-pair-Σ refl {!!}
 ```
 
 ### The universal property of the 2-sphere implies the dependet universal property of the 2-sphere

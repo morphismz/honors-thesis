@@ -175,7 +175,7 @@ module _
           λ α → compute-dependent-2-loop (B , b) α) ∘e
         ( equiv-pair-eq²-Σ refl refl)))
 
-  compute-inv-compute-free-2-loop-Σ :
+{-  compute-inv-compute-free-2-loop-Σ :
      inv-equiv compute-free-2-loop-Σ ＝ inv-compute-free-2-loop-Σ
   compute-inv-compute-free-2-loop-Σ =
     ( {!distributive-inv-comp-equiv
@@ -185,7 +185,7 @@ module _
           ( inv-equiv (equiv-pair-eq²-Σ refl refl)) ∘e
           ( equiv-tot
             λ α → inv-equiv (compute-dependent-2-loop (B , pr2 z) α)))!}) ∙
-    ( {!!})
+    ( {!!})-}
 
   map-compute-free-2-loop-Σ' :
     (α : free-2-loop  X) (β : free-dependent-2-loop α B) →
