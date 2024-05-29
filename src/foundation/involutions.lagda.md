@@ -21,7 +21,9 @@ open import foundation.negation
 open import foundation.structure-identity-principle
 open import foundation.universal-property-equivalences
 open import foundation.universe-levels
+open import foundation.whiskering-higher-homotopies-composition
 open import foundation.whiskering-homotopies-composition
+open import foundation.whiskering-homotopies-concatenation
 
 open import foundation-core.function-types
 open import foundation-core.homotopies
@@ -258,9 +260,9 @@ module _
       ( conjugate-equiv-involution g)
   pr1 (htpy-conjugate-equiv-involution H) =
     htpy-conjugate-equiv e  (htpy-htpy-involution H)
-  pr2 (htpy-conjugate-equiv-involution H) =
-    {!!}
-
+  pr2 (htpy-conjugate-equiv-involution {f} {g} H) =
+    {!right-whisker-comp²!}
+-- double-whisker-comp (map-equiv e ∘ map-involution f) (is-retraction-map-inv-equiv e) (map-involution f ∘ map-inv-equiv e)
   conjugate-inv-equiv-involution :
     involution X → involution A
   pr1 (conjugate-inv-equiv-involution f) =
