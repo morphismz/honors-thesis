@@ -153,3 +153,17 @@ emb-raise : (l : Level) {l1 : Level} → UU l1 ↪ UU (l1 ⊔ l)
 pr1 (emb-raise l) = raise l
 pr2 (emb-raise l) = is-emb-raise l
 ```
+
+### Test
+
+```agda
+module _
+  {l1 l2 : Level}
+  where
+
+  t :
+    (l : Level) (P : UU l1 → UU l2) →
+    UU (l1 ⊔ l) → UU l2
+  t l P A = P {!!}
+
+```
