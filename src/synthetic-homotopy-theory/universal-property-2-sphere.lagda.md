@@ -125,9 +125,10 @@ module _
   where
 
   t :
-    (ap² (λ x → x , f x) (pr2 α)) ＝ 
-    (map-inv-equiv (equiv-pair-eq²-Σ refl refl)
-    (Eq²-Σ-free-dependent-2-loop (α , ev-free-2-loop-∏ α P f)))
+    (ap² (map-section-family f) (pr2 α)) ＝ 
+    (map-inv-equiv
+      ( equiv-pair-eq²-Σ refl refl)
+      ( Eq²-Σ-free-dependent-2-loop (α , ev-free-2-loop-∏ α P f)))
   t = {!!}
 
   test :
@@ -138,7 +139,23 @@ module _
   test' = eq-pair-Σ refl {!!}
 ```
 
-### The universal property of the 2-sphere implies the dependet universal property of the 2-sphere
+### The universal property of the 2-sphere implies the induction principle of the 2-sphere
+
+```agda
+module _
+  {l1 : Level} {X : UU l1} (α : free-2-loop X)
+  (u : universal-property-2-sphere α)
+  where
+
+  induction-principle-2-sphere-universal-property-2-sphere :
+    induction-principle-2-sphere α
+  pr1 (induction-principle-2-sphere-universal-property-2-sphere P) β =
+    {!map-compute-free-2-loop-Σ (α , β)!}
+  pr2 (induction-principle-2-sphere-universal-property-2-sphere P) = {!!}
+    
+```
+
+### The universal property of the 2-sphere implies the dependent universal property of the 2-sphere
 
 ```agda
 module _
@@ -150,6 +167,5 @@ module _
     dependent-universal-property-2-sphere α
   dependent-universal-property-2-sphere-universal-property-2-sphere =
     λ P → {! !}
-
 ```
 
