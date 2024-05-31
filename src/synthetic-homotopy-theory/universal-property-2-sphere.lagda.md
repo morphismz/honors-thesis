@@ -10,6 +10,7 @@ module synthetic-homotopy-theory.universal-property-2-sphere where
 open import foundation.action-on-identifications-dependent-functions
 open import foundation.action-on-higher-identifications-functions
 open import foundation.action-on-identifications-functions
+open import foundation.cartesian-product-types
 open import foundation.constant-type-families
 open import foundation.contractible-maps
 open import foundation.contractible-types
@@ -63,6 +64,16 @@ module _
   universal-property-2-sphere : UUω
   universal-property-2-sphere =
     {l : Level} (Y : UU l) → is-equiv (ev-free-2-loop α Y)
+
+  equiv-universal-property-2-sphere : UUω
+  equiv-universal-property-2-sphere =
+    {l : Level} (Y : UU l) → (X → Y) ≃ free-2-loop Y
+
+  equiv-universal-property-2-sphere-universal-property-2-sphere :
+    universal-property-2-sphere → equiv-universal-property-2-sphere
+  pr1 (equiv-universal-property-2-sphere-universal-property-2-sphere u Y) =
+    ev-free-2-loop α Y
+  pr2 (equiv-universal-property-2-sphere-universal-property-2-sphere u Y) = u Y
 ```
 
 ### Evaluating a dependent function at a free 2-loop
@@ -143,9 +154,25 @@ module _
 
 ```agda
 module _
+  {l1 l2 : Level} {X : UU l1} (α : free-2-loop X)
+  (u : universal-property-2-sphere α) (B : X → UU l2)
+  where
+
+  e :
+    section (pr1 {B = B}) ≃
+    Σ (free-2-loop (Σ X B))
+      λ s →
+        ( Eq-free-2-loop α (pr1 (map-equiv (inv-compute-free-2-loop-Σ B) s)))
+  e =
+    {!!}
+
+
+module _
   {l1 : Level} {X : UU l1} (α : free-2-loop X)
   (u : universal-property-2-sphere α)
   where
+
+  
 
   induction-principle-2-sphere-universal-property-2-sphere :
     induction-principle-2-sphere α
