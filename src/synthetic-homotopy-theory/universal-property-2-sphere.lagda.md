@@ -11,6 +11,7 @@ open import foundation.action-on-identifications-dependent-functions
 open import foundation.action-on-higher-identifications-functions
 open import foundation.action-on-identifications-functions
 open import foundation.cartesian-product-types
+open import foundation.commuting-squares-of-identifications
 open import foundation.constant-type-families
 open import foundation.contractible-maps
 open import foundation.contractible-types
@@ -30,6 +31,7 @@ open import foundation.transport-along-identifications
 open import foundation.universe-levels
 
 open import synthetic-homotopy-theory.dependent-2-loops
+open import synthetic-homotopy-theory.double-loop-spaces
 open import synthetic-homotopy-theory.free-2-loops
 ```
 
@@ -52,6 +54,21 @@ module _
   ev-free-2-loop : (X → Y) → free-2-loop Y
   pr1 (ev-free-2-loop f) = f (base-free-2-loop α)
   pr2 (ev-free-2-loop f) = ap² f (2-loop-free-2-loop α)
+
+Eq-free-2-loop-ev-free-2-loop-id :
+  {l1 : Level} {X : UU l1} (α : free-2-loop X) → Eq-free-2-loop (ev-free-2-loop α X id) α
+pr1 (Eq-free-2-loop-ev-free-2-loop-id α) = refl
+pr2 (Eq-free-2-loop-ev-free-2-loop-id α) =
+  ( inv (tr-Ω² refl (ap² id (2-loop-free-2-loop α)))) ∙
+  ( inv right-unit) ∙
+  ( ap²-id (2-loop-free-2-loop α))
+
+compute-ev-free-2-loop-id :
+  {l1 : Level} {X : UU l1} (α : free-2-loop X) → (ev-free-2-loop α X id) ＝ α  
+compute-ev-free-2-loop-id {X = X} α =
+  map-inv-equiv
+    ( extensionality-free-2-loop (ev-free-2-loop α X id) α)
+    ( Eq-free-2-loop-ev-free-2-loop-id α)
 ```
 
 ### The universal property of the 2-sphere
@@ -127,27 +144,19 @@ module _
 
 ## Properties
 
-### Evaluating a free 2-loop into a type of dependent pairs factors through evaluating a free dependent-2-loop
+### Evaluating a free 2-loop into a type of dependent pairs
 
 ```agda
 module _
-  {l1 l2 : Level} {X : UU l1} (α : free-2-loop X) (P : X → UU l2)
-  (f : (x : X) → P x)
+  {l1 l2 : Level} {X : UU l1} (α : free-2-loop X) (B : X → UU l2)
   where
 
   t :
-    (ap² (map-section-family f) (pr2 α)) ＝ 
-    (map-inv-equiv
-      ( equiv-pair-eq²-Σ refl refl)
-      ( Eq²-Σ-free-dependent-2-loop (α , ev-free-2-loop-∏ α P f)))
+    (s : free-2-loop (Σ X B)) →
+    (pr1 (base-free-2-loop s) , ap² pr1 (2-loop-free-2-loop s)) ＝ pr1 (map-inv-equiv (compute-free-2-loop-Σ B) s)
   t = {!!}
+  
 
-  test :
-    pr1 (map-inv-equiv (compute-free-2-loop-Σ P) (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x)))) ＝ α
-  test = eq-pair-Σ {!pr1 (pr1 (ev-free-2-loop α (Σ X P) (λ x → x , f x)))!} {!!}
-
-  test' : (ev-free-2-loop α (Σ X P) (λ x → (x ,  f x))) ＝ map-compute-free-2-loop-Σ (α , (ev-free-2-loop-∏ α P f))
-  test' = eq-pair-Σ refl {!!}
 ```
 
 ### The universal property of the 2-sphere implies the induction principle of the 2-sphere
@@ -162,11 +171,18 @@ module _
     section (pr1 {B = B}) ≃
     Σ (free-2-loop (Σ X B))
       λ s →
-        ( Eq-free-2-loop α (pr1 (map-equiv (inv-compute-free-2-loop-Σ B) s)))
+        ( Eq-free-2-loop (pr1 (map-equiv (inv-compute-free-2-loop-Σ B) s)) α)
   e =
-    {!!}
+    ( equiv-Σ
+      (λ s → Eq-free-2-loop (pr1 (map-equiv (inv-compute-free-2-loop-Σ B) s)) α)
+      ( equiv-universal-property-2-sphere-universal-property-2-sphere α u (Σ X B))
+      ( λ f →
+        ( ( {!extensionality-free-2-loop (ev-free-2-loop α X (pr1 ∘ f)) α!})) ∘e
+        ( equiv-concat' (ev-free-2-loop α X (pr1 ∘ f)) (compute-ev-free-2-loop-id α)) ∘e
+        ( equiv-ap (equiv-universal-property-2-sphere-universal-property-2-sphere α u X) (pr1 ∘ f) (id)) ∘e
+        ( equiv-eq-htpy)))
 
-
+--  (extensionality-free-2-loop (ev-free-2-loop α X (pr1 ∘ f)) α)
 module _
   {l1 : Level} {X : UU l1} (α : free-2-loop X)
   (u : universal-property-2-sphere α)

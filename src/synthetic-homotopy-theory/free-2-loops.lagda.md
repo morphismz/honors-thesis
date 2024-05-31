@@ -111,10 +111,27 @@ module _
       ( λ p →
         map-tr-Ω² p (2-loop-free-2-loop α) ＝ 2-loop-free-2-loop α')
 
-  refl-Eq-free-loop : (α : free-2-loop X) → Eq-free-2-loop α α
-  pr1 (refl-Eq-free-loop α) = refl
-  pr2 (refl-Eq-free-loop α) = inv (tr-Ω² refl (2-loop-free-2-loop α))
-    
+  refl-Eq-free-2-loop : (α : free-2-loop X) → Eq-free-2-loop α α
+  pr1 (refl-Eq-free-2-loop α) = refl
+  pr2 (refl-Eq-free-2-loop α) = inv (tr-Ω² refl (2-loop-free-2-loop α))
+
+  extensionality-free-2-loop :
+    (α α' : free-2-loop X) → (α ＝ α') ≃ Eq-free-2-loop α α'
+  extensionality-free-2-loop α =
+    extensionality-Σ
+      ( λ s p → map-tr-Ω² p (2-loop-free-2-loop α) ＝ s)
+      ( refl)
+      ( inv (tr-Ω² refl (2-loop-free-2-loop α)))
+      ( λ x → id-equiv)
+      ( λ y → equiv-concat (inv (tr-Ω² refl (2-loop-free-2-loop α))) y)
+
+  Eq-eq-free-2-loop :
+    (α α' : free-2-loop X) → α ＝ α' → Eq-free-2-loop α α'
+  Eq-eq-free-2-loop α α' = map-equiv (extensionality-free-2-loop α α')
+
+  eq-Eq-free-2-loop :
+      (α α' : free-2-loop X) → Eq-free-2-loop α α' → α ＝ α'
+  eq-Eq-free-2-loop α α' = map-inv-equiv (extensionality-free-2-loop α α')    
 ```
 
 ### A free 2-loop and a free dependent 2-loop are equivalent to a free 2-loop in the total space
@@ -175,23 +192,16 @@ module _
           λ α → compute-dependent-2-loop (B , b) α) ∘e
         ( equiv-pair-eq²-Σ refl refl)))
 
-{-  compute-inv-compute-free-2-loop-Σ :
-     inv-equiv compute-free-2-loop-Σ ＝ inv-compute-free-2-loop-Σ
-  compute-inv-compute-free-2-loop-Σ =
-    ( {!distributive-inv-comp-equiv
-      ( interchange-Σ-Σ (λ x α b → dependent-2-loop (B , b) α))
-      ( equiv-tot
-        λ z →
-          ( inv-equiv (equiv-pair-eq²-Σ refl refl)) ∘e
-          ( equiv-tot
-            λ α → inv-equiv (compute-dependent-2-loop (B , pr2 z) α)))!}) ∙
-    ( {!!})-}
-
   map-compute-free-2-loop-Σ' :
     (α : free-2-loop  X) (β : free-dependent-2-loop α B) →
     free-2-loop (Σ X B)
   map-compute-free-2-loop-Σ' α β = map-compute-free-2-loop-Σ (α , β)
-
-
 ```
 
+```agda
+module _
+  {l1 l2 : Level} {X : UU l1} (B : X → UU l2)
+  where
+
+  
+```

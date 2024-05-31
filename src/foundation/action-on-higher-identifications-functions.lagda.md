@@ -53,6 +53,24 @@ module _
 
 ## Properties
 
+### Action on higher identifications of the identity function
+
+```agda
+module _
+  {l1 : Level} {A : UU l1} {x y : A} {p q : x ＝ y}
+  where
+
+  ap²-id :
+    (α : p ＝ q ) →
+    coherence-square-identifications
+      ( ap-id p)
+      ( ap² id α)
+      ( α)
+      ( ap-id q)
+  ap²-id refl = vertical-refl-coherence-square-identifications (ap-id p)
+
+```
+
 ### The inverse law of the action of functions on higher identifications
 
 Consider an identification `α : p ＝ q` between two identifications
