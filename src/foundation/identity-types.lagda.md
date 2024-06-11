@@ -283,6 +283,12 @@ module _
   left-transpose-eq-concat' p q r =
     map-equiv (equiv-left-transpose-eq-concat' p q r)
 
+  inv-left-transpose-eq-concat' :
+    (p : x ＝ z) (q : x ＝ y) (r : y ＝ z) →
+    inv q ∙ p ＝ r → p ＝ q ∙ r
+  inv-left-transpose-eq-concat' p q r =
+    map-inv-equiv (equiv-left-transpose-eq-concat' p q r)
+
   abstract
     is-equiv-right-transpose-eq-concat :
       (p : x ＝ y) (q : y ＝ z) (r : x ＝ z) →

@@ -10,6 +10,7 @@ module synthetic-homotopy-theory.loop-spaces where
 open import foundation.dependent-pair-types
 open import foundation.equivalences
 open import foundation.identity-types
+open import foundation.transport-along-identifications
 open import foundation.universe-levels
 
 open import structured-types.h-spaces
@@ -135,7 +136,9 @@ module _
   where
 
   equiv-tr-Ω : Id x y → Ω (pair A x) ≃∗ Ω (pair A y)
-  equiv-tr-Ω refl = pair id-equiv refl
+  pr1 (equiv-tr-Ω p) = equiv-tr (λ t → type-Ω (A , t)) p
+  pr2 (equiv-tr-Ω p) =
+    tr-loop p refl ∙ assoc (inv p) refl p ∙ left-inv p 
 
   equiv-tr-type-Ω : Id x y → type-Ω (pair A x) ≃ type-Ω (pair A y)
   equiv-tr-type-Ω p =

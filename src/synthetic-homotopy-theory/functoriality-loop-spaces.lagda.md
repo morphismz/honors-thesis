@@ -13,6 +13,7 @@ open import foundation.embeddings
 open import foundation.equivalences
 open import foundation.faithful-maps
 open import foundation.identity-types
+open import foundation.transport-along-identifications
 open import foundation.universe-levels
 
 open import structured-types.faithful-pointed-maps
@@ -72,6 +73,23 @@ module _
     ( preserves-inv-tr-Ω
       ( preserves-point-pointed-map f)
       ( ap (map-pointed-map f) x))
+```
+
+### Computing `map-Ω` with concatenation of identifications
+
+```agda
+module _
+  {l1 l2 : Level} {A : Pointed-Type l1} {B : Pointed-Type l2} (f : A →∗ B)
+  where
+
+  compute-map-Ω :
+    (l : type-Ω A) →
+    ( map-Ω f l) ＝
+    ( ( inv (preserves-point-pointed-map f)) ∙
+      ( ap (map-pointed-map f) l) ∙
+      ( preserves-point-pointed-map f))
+  compute-map-Ω l =
+    tr-loop (preserves-point-pointed-map f) (ap (map-pointed-map f) l)
 ```
 
 ### Faithful pointed maps induce embeddings on loop spaces
