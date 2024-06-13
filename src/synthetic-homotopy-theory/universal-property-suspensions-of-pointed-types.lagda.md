@@ -10,6 +10,7 @@ module synthetic-homotopy-theory.universal-property-suspensions-of-pointed-types
 open import foundation.action-on-identifications-functions
 open import foundation.commuting-squares-of-identifications
 open import foundation.contractible-types
+open import foundation.constant-maps
 open import foundation.dependent-pair-types
 open import foundation.equivalences
 open import foundation.function-types
@@ -20,8 +21,10 @@ open import foundation.torsorial-type-families
 open import foundation.transport-along-identifications
 open import foundation.type-arithmetic-dependent-pair-types
 open import foundation.universe-levels
+open import foundation.whiskering-homotopies-composition
 open import foundation.whiskering-identifications-concatenation
 
+open import structured-types.constant-pointed-maps
 open import structured-types.pointed-equivalences
 open import structured-types.pointed-homotopies
 open import structured-types.pointed-maps
@@ -117,6 +120,54 @@ module _
   transpose-suspension-loop-adjunction f∗ =
     pointed-map-Ω f∗ ∘∗ pointed-map-unit-suspension-loop-adjunction X
 
+  htpy-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction :
+    ( map-pointed-map
+      ( transpose-suspension-loop-adjunction
+        ( constant-pointed-map (suspension-Pointed-Type X) Y))) ~
+    ( map-pointed-map
+      ( constant-pointed-map X (Ω Y)))
+  htpy-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction =
+    (htpy-preserves-constant-pointed-map-pointed-map-Ω (suspension-Pointed-Type X) Y) ·r (map-unit-suspension-loop-adjunction X) ∙h
+    htpy-pointed-htpy (comp-left-constant-pointed-map (pointed-map-unit-suspension-loop-adjunction X))
+
+--- DEFINE GENERAL INFRASTRUCTURE FOR CONCATINATION AND WHISKERING OF POINTED HOMOTOPIES TO AVOID THIS NEXT STEP
+
+  coherence-point-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction :
+    coherence-point-unpointed-htpy-pointed-Π
+      ( transpose-suspension-loop-adjunction
+        ( constant-pointed-map (suspension-Pointed-Type X) Y))
+      ( constant-pointed-map X (Ω Y))
+      ( htpy-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction)
+  coherence-point-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction =
+    {!!}
+
+  pointed-htpy-preserves-point-transpose-suspension-loop-adjunction :
+    pointed-htpy
+      ( transpose-suspension-loop-adjunction
+        ( constant-pointed-map (suspension-Pointed-Type X) Y))
+      ( constant-pointed-map X (Ω Y))
+  pr1 pointed-htpy-preserves-point-transpose-suspension-loop-adjunction =
+    htpy-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction
+  pr2 pointed-htpy-preserves-point-transpose-suspension-loop-adjunction =
+    coherence-point-pointed-htpy-preserves-point-transpose-suspension-loop-adjunction
+
+  preserves-point-transpose-suspension-loop-adjunction :
+    ( transpose-suspension-loop-adjunction
+      ( constant-pointed-map (suspension-Pointed-Type X) Y)) ＝
+    ( constant-pointed-map X (Ω Y))
+  preserves-point-transpose-suspension-loop-adjunction =
+    eq-pointed-htpy
+      ( transpose-suspension-loop-adjunction
+        ( constant-pointed-map (suspension-Pointed-Type X) Y))
+      ( constant-pointed-map X (Ω Y))
+      ( pointed-htpy-preserves-point-transpose-suspension-loop-adjunction)
+    
+  pointed-map-transpose-suspension-loop-adjunction :
+    pointed-map-Pointed-Type (suspension-Pointed-Type X) Y →∗
+    pointed-map-Pointed-Type X (Ω Y)
+  pr1 pointed-map-transpose-suspension-loop-adjunction = transpose-suspension-loop-adjunction
+  pr2 pointed-map-transpose-suspension-loop-adjunction = preserves-point-transpose-suspension-loop-adjunction
+  
 module _
   {l1 l2 : Level} (X : Pointed-Type l1) (Y : Pointed-Type l2)
   where
@@ -268,6 +319,10 @@ module _
                   ( map-pointed-map f∗))
                 ( point-Pointed-Type X)))))))
 
+  compute-point-htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction :
+    (f∗ : X →∗ Ω Y) →
+    htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗ (point-Pointed-Type X) ＝ {!!}
+  compute-point-htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction = {!!}
 
   coherence-point-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction :
     (f∗ : X →∗ Ω Y) →
@@ -278,7 +333,7 @@ module _
       ( f∗)
       ( htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗)
   coherence-point-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗ =
-    {!this will hurt my asshole!}
+    {!!}
         
   pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction :
     (f∗ : X →∗ Ω Y) →
@@ -294,12 +349,56 @@ module _
 
   is-section-inv-transpose-suspension-loop-adjunction :
     ( ( transpose-suspension-loop-adjunction X Y) ∘
-    ( inv-transpose-suspension-loop-adjunction X Y)) ~
+      ( inv-transpose-suspension-loop-adjunction X Y)) ~
     ( id)
   is-section-inv-transpose-suspension-loop-adjunction f∗ =
     eq-pointed-htpy
       ( ( ( transpose-suspension-loop-adjunction X Y) ∘
         ( inv-transpose-suspension-loop-adjunction X Y))
+          ( f∗))
+      ( f∗)
+      ( pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗)
+
+  htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
+    (f∗ : suspension-Pointed-Type X →∗ Y) →
+    ( map-pointed-map
+      ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+        ( transpose-suspension-loop-adjunction X Y))
+          ( f∗))) ~
+     ( map-pointed-map f∗)
+  htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl) = {!!}
+
+  coherence-point-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
+    (f∗ : suspension-Pointed-Type X →∗ Y) →
+     coherence-point-unpointed-htpy-pointed-Π
+       ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+         ( transpose-suspension-loop-adjunction X Y))
+           ( f∗))
+       ( f∗)
+       ( htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗)
+  coherence-point-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl) =
+    {!!}
+
+  pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
+    (f∗ : suspension-Pointed-Type X →∗ Y) → 
+    pointed-htpy
+      ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+        ( transpose-suspension-loop-adjunction X Y))
+          ( f∗))
+      ( f∗)
+  pr1 (pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗) =
+    htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗ 
+  pr2 (pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗) =
+    coherence-point-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗
+
+  is-retraction-inv-transpose-suspension-loop-adjunction :
+    ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+      ( transpose-suspension-loop-adjunction X Y)) ~
+      ( id)
+  is-retraction-inv-transpose-suspension-loop-adjunction f∗ =
+    eq-pointed-htpy
+      ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+        ( transpose-suspension-loop-adjunction X Y))
           ( f∗))
       ( f∗)
       ( {!!})
@@ -312,37 +411,41 @@ module _
   {l1 l2 : Level} (X : Pointed-Type l1) (Y : Pointed-Type l2)
   where
 
+  is-equiv-transpose-suspension-loop-adjunction :
+    is-equiv (transpose-suspension-loop-adjunction X Y)
+  is-equiv-transpose-suspension-loop-adjunction =
+    is-equiv-is-invertible
+      ( inv-transpose-suspension-loop-adjunction X Y)
+      ( is-section-inv-transpose-suspension-loop-adjunction X Y)
+      ( is-retraction-inv-transpose-suspension-loop-adjunction X Y)
+
   equiv-transpose-suspension-loop-adjunction :
     (suspension-Pointed-Type X →∗ Y) ≃ (X →∗ Ω Y)
-  equiv-transpose-suspension-loop-adjunction =
-    ( left-unit-law-Σ-is-contr
-      ( is-torsorial-Id (point-Pointed-Type Y))
-      ( point-Pointed-Type Y , refl)) ∘e
-    ( inv-associative-Σ
-      ( type-Pointed-Type Y)
-      ( λ z → point-Pointed-Type Y ＝ z)
-      ( λ t →
-        Σ ( type-Pointed-Type X → point-Pointed-Type Y ＝ pr1 t)
-          ( λ f → f (point-Pointed-Type X) ＝ pr2 t))) ∘e
-    ( equiv-tot (λ y1 → equiv-left-swap-Σ)) ∘e
-    ( associative-Σ
-      ( type-Pointed-Type Y)
-      ( λ y1 → type-Pointed-Type X → point-Pointed-Type Y ＝ y1)
-      ( λ z →
-        Σ ( point-Pointed-Type Y ＝ pr1 z)
-          ( λ x → pr2 z (point-Pointed-Type X) ＝ x))) ∘e
-    ( inv-right-unit-law-Σ-is-contr
-      ( λ z → is-torsorial-Id (pr2 z (point-Pointed-Type X)))) ∘e
-    ( left-unit-law-Σ-is-contr
-      ( is-torsorial-Id' (point-Pointed-Type Y))
-      ( point-Pointed-Type Y , refl)) ∘e
-    ( equiv-right-swap-Σ) ∘e
-    ( equiv-Σ-equiv-base
-      ( λ c → pr1 c ＝ point-Pointed-Type Y)
-      ( equiv-up-suspension))
+  pr1 equiv-transpose-suspension-loop-adjunction =
+    transpose-suspension-loop-adjunction X Y
+  pr2 equiv-transpose-suspension-loop-adjunction =
+    is-equiv-transpose-suspension-loop-adjunction
 ```
 
 #### The equivalence in the suspension-loop space adjunction is pointed
+
+```agda
+module _
+  {l1 l2 : Level} (X : Pointed-Type l1) (Y : Pointed-Type l2)
+  where
+
+  is-pointed-equiv-transpose-suspension-loop-adjunction :
+    is-pointed-equiv (pointed-map-transpose-suspension-loop-adjunction X Y)
+  is-pointed-equiv-transpose-suspension-loop-adjunction = {!!}
+
+  pointed-equiv-transpose-suspension-loop-adjunction :
+    ( pointed-map-Pointed-Type (suspension-Pointed-Type X) Y) ≃∗
+    ( pointed-map-Pointed-Type X (Ω Y))
+  pr1 pointed-equiv-transpose-suspension-loop-adjunction =
+    equiv-transpose-suspension-loop-adjunction X Y
+  pr2 pointed-equiv-transpose-suspension-loop-adjunction =
+    preserves-point-transpose-suspension-loop-adjunction X Y
+```
 
 This remains to be shown.
 [#702](https://github.com/UniMath/agda-unimath/issues/702)

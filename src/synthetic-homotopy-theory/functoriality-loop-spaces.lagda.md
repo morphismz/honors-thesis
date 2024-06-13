@@ -12,12 +12,15 @@ open import foundation.dependent-pair-types
 open import foundation.embeddings
 open import foundation.equivalences
 open import foundation.faithful-maps
+open import foundation.homotopies
 open import foundation.identity-types
 open import foundation.transport-along-identifications
 open import foundation.universe-levels
 
+open import structured-types.constant-pointed-maps
 open import structured-types.faithful-pointed-maps
 open import structured-types.pointed-equivalences
+open import structured-types.pointed-homotopies
 open import structured-types.pointed-maps
 open import structured-types.pointed-types
 
@@ -171,4 +174,52 @@ module _
   pr1 pointed-equiv-Ω-pointed-equiv = equiv-map-Ω-pointed-equiv e
   pr2 pointed-equiv-Ω-pointed-equiv =
     preserves-refl-map-Ω (pointed-map-pointed-equiv e)
+```
+
+### pointed-map-Ω is itself a pointed map
+
+```agda
+module _
+  {l1 l2 : Level} (A : Pointed-Type l1) (B : Pointed-Type l2)
+  where
+
+  htpy-preserves-constant-pointed-map-pointed-map-Ω :
+    ( map-Ω (constant-pointed-map A B)) ~
+    ( map-constant-pointed-map (Ω A) (Ω B))
+  htpy-preserves-constant-pointed-map-pointed-map-Ω p =
+    ap-constant-pointed-map A B p
+
+  coherence-point-pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω :
+    coherence-point-unpointed-htpy-pointed-Π
+      ( pointed-map-Ω (constant-pointed-map A B))
+      ( constant-pointed-map (Ω A) (Ω B))
+      ( htpy-preserves-constant-pointed-map-pointed-map-Ω)
+  coherence-point-pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω =
+    refl
+
+  pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω :
+    pointed-htpy
+      ( pointed-map-Ω (constant-pointed-map A B))
+      ( constant-pointed-map (Ω A) (Ω B))
+  pr1 pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω =
+    htpy-preserves-constant-pointed-map-pointed-map-Ω
+  pr2 pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω =
+    coherence-point-pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω
+
+  preserves-constant-pointed-map-pointed-map-Ω :
+    pointed-map-Ω (constant-pointed-map A B) ＝
+    constant-pointed-map (Ω A) (Ω B)
+  preserves-constant-pointed-map-pointed-map-Ω =
+    eq-pointed-htpy
+      ( pointed-map-Ω (constant-pointed-map A B))
+      ( constant-pointed-map (Ω A) (Ω B))
+      ( pointed-htpy-preserves-constant-pointed-map-pointed-map-Ω)
+
+  pointed-map-Ω-pointed-map :
+    pointed-map-Pointed-Type A B →∗ pointed-map-Pointed-Type (Ω A) (Ω B)
+  pr1 pointed-map-Ω-pointed-map = pointed-map-Ω
+  pr2 pointed-map-Ω-pointed-map =
+    preserves-constant-pointed-map-pointed-map-Ω
+
+  
 ```

@@ -151,7 +151,7 @@ module _
   is-equiv-tr-type-Ω p = is-equiv-map-equiv (equiv-tr-type-Ω p)
 
   preserves-refl-tr-Ω : (p : Id x y) → Id (tr-type-Ω p refl) refl
-  preserves-refl-tr-Ω refl = refl
+  preserves-refl-tr-Ω p = preserves-point-pointed-equiv (equiv-tr-Ω p)
 
   preserves-mul-tr-Ω :
     (p : Id x y) (u v : type-Ω (pair A x)) →
