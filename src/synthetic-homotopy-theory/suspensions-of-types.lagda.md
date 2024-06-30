@@ -497,20 +497,20 @@ module _
       ( inv (compute-inv-equiv-htpy-function-out-of-suspension-htpy c))) ∙
     ( is-section-map-inv-equiv (equiv-htpy-function-out-of-suspension-htpy) c)
 
-  equiv-htpy-function-out-of-suspension-htpy-north-suspension :
+  compute-north-htpy-htpy-function-out-of-suspension :
     (c : htpy-function-out-of-suspension) →
     ( htpy-htpy-function-out-of-suspension c north-suspension) ＝
     ( north-htpy-function-out-of-suspension c)
-  equiv-htpy-function-out-of-suspension-htpy-north-suspension c =
+  compute-north-htpy-htpy-function-out-of-suspension c =
     north-htpy-in-htpy-suspension-structure
       ( htpy-eq-htpy-suspension-structure
         ( is-section-htpy-htpy-function-out-of-suspension c))
 
-  equiv-htpy-function-out-of-suspension-htpy-south-suspension :
+  compute-south-htpy-htpy-function-out-of-suspension :
     (c : htpy-function-out-of-suspension) →
     ( htpy-htpy-function-out-of-suspension c south-suspension) ＝
     ( south-htpy-function-out-of-suspension c)
-  equiv-htpy-function-out-of-suspension-htpy-south-suspension c =
+  compute-south-htpy-htpy-function-out-of-suspension c =
     south-htpy-in-htpy-suspension-structure
       ( htpy-eq-htpy-suspension-structure
         ( is-section-htpy-htpy-function-out-of-suspension c))

@@ -8,6 +8,7 @@ module synthetic-homotopy-theory.universal-property-suspensions-of-pointed-types
 
 ```agda
 open import foundation.action-on-identifications-functions
+open import foundation.commuting-squares-of-homotopies
 open import foundation.commuting-squares-of-identifications
 open import foundation.contractible-types
 open import foundation.constant-maps
@@ -359,6 +360,126 @@ module _
       ( f∗)
       ( pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗)
 
+  htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
+    (f∗ : suspension-Pointed-Type X →∗ Y) →
+    htpy-function-out-of-suspension
+      ( type-Pointed-Type X)
+      ( map-pointed-map
+        ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+          ( transpose-suspension-loop-adjunction X Y))
+            ( f∗)))
+       ( map-pointed-map f∗)
+  pr1 (htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl)) =
+    compute-north-cogap-suspension
+      ( suspension-structure-map-into-Ω
+        ( type-Pointed-Type X)
+        ( type-Pointed-Type Y , f north-suspension)
+        ( map-pointed-map
+          ( transpose-suspension-loop-adjunction
+            ( X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( f , refl))))
+  pr1 (pr2 (htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl))) =
+    ( compute-south-cogap-suspension
+      ( suspension-structure-map-into-Ω
+        ( type-Pointed-Type X)
+        ( type-Pointed-Type Y , f north-suspension)
+        ( map-pointed-map
+          ( transpose-suspension-loop-adjunction
+            ( X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( f , refl))))) ∙
+    ( ap f (meridian-suspension (point-Pointed-Type X)))
+  pr2 (pr2 (htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl))) x =
+    concat-top-identification-coherence-square-identifications
+      ( ( compute-north-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( map-pointed-map
+              ( transpose-suspension-loop-adjunction
+                ( X)
+                ( type-Pointed-Type Y , f north-suspension)
+                ( f , refl))))) ∙
+        ( refl))
+      ( ap
+        ( map-pointed-map
+          ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+            ( transpose-suspension-loop-adjunction X Y))
+              ( f , refl)))
+        ( meridian-suspension x))
+      ( ap f (meridian-suspension x))
+      ( ( compute-south-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( map-pointed-map
+              ( transpose-suspension-loop-adjunction
+                ( X)
+                ( type-Pointed-Type Y , f north-suspension)
+                ( f , refl))))) ∙
+        ( ap f (meridian-suspension (point-Pointed-Type X))))
+      ( right-unit)
+      ( horizontal-pasting-coherence-square-identifications
+        ( compute-north-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( map-pointed-map
+              ( transpose-suspension-loop-adjunction
+                ( X)
+                ( type-Pointed-Type Y , f north-suspension)
+                ( f , refl)))))
+        ( refl)
+        ( ap
+          ( map-pointed-map
+            ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+              ( transpose-suspension-loop-adjunction X Y))
+                ( f , refl)))
+          ( meridian-suspension x))
+        ( map-pointed-map
+          ( transpose-suspension-loop-adjunction X Y ( f , refl))
+          ( x))
+        ( ap f (meridian-suspension x))
+        ( compute-south-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( map-pointed-map
+              ( transpose-suspension-loop-adjunction
+                ( X)
+                ( type-Pointed-Type Y , f north-suspension)
+                ( f , refl)))))
+        ( ap f (meridian-suspension (point-Pointed-Type X)))
+        ( compute-meridian-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( type-Pointed-Type Y , f north-suspension)
+            ( map-pointed-map
+              ( transpose-suspension-loop-adjunction
+                ( X)
+                ( type-Pointed-Type Y , f north-suspension)
+                ( f , refl))))
+          ( x))
+        ( ( right-whisker-concat
+            ( ap-concat
+              ( f)
+              ( meridian-suspension x)
+              (inv (meridian-suspension (point-Pointed-Type X))))
+            ( ap f (meridian-suspension (point-Pointed-Type X)))) ∙
+          ( double-whisker-concat
+            ( ap f (meridian-suspension x))
+            ( ap-inv f (meridian-suspension (pr2 X)))
+            ( ap f (meridian-suspension (pr2 X)))) ∙
+          ( ( assoc
+              ( ap f (meridian-suspension x))
+              ( inv (ap f (meridian-suspension (pr2 X))))
+              ( ap f (meridian-suspension (pr2 X))))) ∙
+          ( left-whisker-concat
+            ( ap f (meridian-suspension x))
+            ( left-inv (ap f (meridian-suspension (pr2 X))))  ) ∙
+          ( right-unit)))
+
   htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
     (f∗ : suspension-Pointed-Type X →∗ Y) →
     ( map-pointed-map
@@ -366,7 +487,16 @@ module _
         ( transpose-suspension-loop-adjunction X Y))
           ( f∗))) ~
      ( map-pointed-map f∗)
-  htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl) = {!!}
+  htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗ =
+    htpy-htpy-function-out-of-suspension
+      (type-Pointed-Type X)
+      ( map-pointed-map
+        ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+          ( transpose-suspension-loop-adjunction X Y))
+            f∗))
+      ( map-pointed-map f∗)
+      ( htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗)
+      
 
   coherence-point-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
     (f∗ : suspension-Pointed-Type X →∗ Y) →
@@ -377,7 +507,16 @@ module _
        ( f∗)
        ( htpy-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗)
   coherence-point-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl) =
-    {!!}
+    inv
+      ( ( right-unit) ∙
+        ( ( compute-north-htpy-htpy-function-out-of-suspension
+          ( type-Pointed-Type X)
+          ( map-pointed-map
+            ( ( ( inv-transpose-suspension-loop-adjunction X Y) ∘
+              ( transpose-suspension-loop-adjunction X Y))
+                ( f , refl)))
+          ( f )
+          ( htpy-function-out-of-suspension-pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction (f , refl)))))
 
   pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction :
     (f∗ : suspension-Pointed-Type X →∗ Y) → 
@@ -401,7 +540,7 @@ module _
         ( transpose-suspension-loop-adjunction X Y))
           ( f∗))
       ( f∗)
-      ( {!!})
+      ( pointed-htpy-is-retraction-inv-transpose-suspension-loop-adjunction f∗)
 ```
 
 #### The transposing equivalence between pointed maps out of the suspension of `X` and pointed maps into the loop space of `Y`
