@@ -196,6 +196,111 @@ module _
   {l1 l2 : Level} (X : Pointed-Type l1) (Y : Pointed-Type l2)
   where
 
+  lemma-coh-square :
+    (f∗ : X →∗ Ω Y) →
+    (x : type-Pointed-Type X) →
+    coherence-square-identifications
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+      ( ( ap
+          ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗ ))
+          ( meridian-suspension x) )∙ 
+        ( inv
+          ( ap
+            ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗))
+            ( meridian-suspension (point-Pointed-Type X)))))
+      ( map-pointed-map f∗ x ∙ inv (map-pointed-map f∗ (point-Pointed-Type X)))
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+  lemma-coh-square f∗ x =
+    vertical-pasting-coherence-square-identifications
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+      ( ap
+        ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗))
+        ( meridian-suspension x))
+      ( map-pointed-map f∗ x)
+      ( compute-south-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+      ( inv
+        ( ap
+          ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗))
+          ( meridian-suspension (point-Pointed-Type X))))
+      ( inv (map-pointed-map f∗ (point-Pointed-Type X)))
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+      ( compute-meridian-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗))
+        ( x))
+      ( vertical-inv-coherence-square-identifications
+        ( compute-north-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( Y)
+            ( map-pointed-map f∗)))
+        ( ap
+          ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗))
+          ( meridian-suspension (point-Pointed-Type X)))
+        ( map-pointed-map f∗ (point-Pointed-Type X))
+        ( compute-south-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( Y)
+            ( map-pointed-map f∗)))
+        ( compute-meridian-cogap-suspension
+          ( suspension-structure-map-into-Ω
+            ( type-Pointed-Type X)
+            ( Y)
+            ( map-pointed-map f∗))
+          ( point-Pointed-Type X)))
+
+  test :
+    (f∗ : X →∗ Ω Y) (x : type-Pointed-Type X) →
+    ( ( map-pointed-map
+        ( ( ( transpose-suspension-loop-adjunction X Y) ∘
+          ( inv-transpose-suspension-loop-adjunction X Y))
+            ( f∗))
+        ( x)) ＝ 
+      ( map-pointed-map f∗ x)) ≃
+    ( coherence-square-identifications
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗)))
+      ( ( ap
+          ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗ ))
+          ( meridian-suspension x) )∙ 
+        ( inv
+          ( ap
+            ( map-pointed-map (inv-transpose-suspension-loop-adjunction X Y f∗))
+            ( meridian-suspension (point-Pointed-Type X)))))
+      ( map-pointed-map f∗ x ∙ inv (map-pointed-map f∗ (point-Pointed-Type X)))
+      ( compute-north-cogap-suspension
+        ( suspension-structure-map-into-Ω
+          ( type-Pointed-Type X)
+          ( Y)
+          ( map-pointed-map f∗))))
+  test = {!!}
+  
   htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction :
     (f∗ : X →∗ Ω Y) →
     map-pointed-map
@@ -205,6 +310,20 @@ module _
     map-pointed-map f∗
   htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction f∗ x =
     ( compute-map-Ω
+      ( inv-transpose-suspension-loop-adjunction X Y f∗)
+      ( map-unit-suspension-loop-adjunction X x)) ∙
+    ( assoc
+      ( inv
+        (preserves-point-pointed-map
+          ( inv-transpose-suspension-loop-adjunction X Y f∗)))
+      ( ap
+        ( map-pointed-map
+          ( inv-transpose-suspension-loop-adjunction X Y f∗))
+          ( map-unit-suspension-loop-adjunction X x))
+      ( preserves-point-pointed-map
+        ( inv-transpose-suspension-loop-adjunction X Y f∗))) ∙
+    ( {!ap-concat!})
+{-    ( compute-map-Ω
       ( inv-transpose-suspension-loop-adjunction X Y f∗)
       ( map-unit-suspension-loop-adjunction X x)) ∙
     ( assoc
@@ -318,7 +437,7 @@ module _
                   ( type-Pointed-Type X)
                   ( Y)
                   ( map-pointed-map f∗))
-                ( point-Pointed-Type X)))))))
+                ( point-Pointed-Type X)))))))-}
 
   compute-point-htpy-pointed-htpy-is-section-inv-transpose-suspension-loop-adjunction :
     (f∗ : X →∗ Ω Y) →
