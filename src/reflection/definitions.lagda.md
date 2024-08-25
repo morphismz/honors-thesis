@@ -38,7 +38,8 @@ data Definition-Agda : UU lzero where
   data-type-Definition-Agda : ℕ → list Name-Agda → Definition-Agda
   record-type-Definition-Agda :
     Name-Agda → list (Argument-Agda Name-Agda) → Definition-Agda
-  data-constructor-Definition-Agda : Name-Agda → Definition-Agda
+  data-constructor-Definition-Agda :
+    Name-Agda → Quantity-Argument-Agda → Definition-Agda
   postulate-Definition-Agda : Definition-Agda
   primitive-function-Definition-Agda : Definition-Agda
 ```
