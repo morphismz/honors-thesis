@@ -69,6 +69,17 @@ compute-ind-singleton :
   (ev-point a {B} ∘ ind-singleton a is-contr-A B) ~ id
 compute-ind-singleton a is-contr-A B b =
   ap (λ p → tr B p b) (left-inv (contraction is-contr-A a))
+
+ind-singleton-test :
+  {l1 l2 : Level} {A : UU l1} (a : A) (is-contr-A : is-contr A)
+  (B : A → UU l2) (b : B a) → {x : A} (p : a ＝ x) → ind-singleton a is-contr-A B b x ＝ tr B p b
+ind-singleton-test a is-contr-A B b {x} p =
+  ap
+    ( λ t → tr B t b)
+    ( eq-is-contr'
+      ( is-prop-is-contr is-contr-A a x)
+      ( inv (contraction is-contr-A a) ∙ contraction is-contr-A x)
+      ( p))
 ```
 
 ### A type satisfies singleton induction if and only if it is contractible

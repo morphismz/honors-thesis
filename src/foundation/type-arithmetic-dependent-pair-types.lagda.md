@@ -9,6 +9,7 @@ module foundation.type-arithmetic-dependent-pair-types where
 ```agda
 open import foundation.action-on-identifications-functions
 open import foundation.dependent-pair-types
+open import foundation.function-types
 open import foundation.singleton-induction
 open import foundation.universe-levels
 
@@ -21,6 +22,7 @@ open import foundation-core.fibers-of-maps
 open import foundation-core.function-types
 open import foundation-core.homotopies
 open import foundation-core.identity-types
+open import foundation-core.transport-along-identifications
 open import foundation-core.torsorial-type-families
 ```
 
@@ -97,6 +99,33 @@ module _
   inv-left-unit-law-Σ-is-contr : B a ≃ Σ A B
   pr1 inv-left-unit-law-Σ-is-contr = map-inv-left-unit-law-Σ-is-contr
   pr2 inv-left-unit-law-Σ-is-contr = is-equiv-map-inv-left-unit-law-Σ-is-contr
+
+  map-left-unit-law-Σ-is-contr-test : --- BETTER in the case that A is total space of Id, show for any (a , p), the map is given by tr B p
+    {x : A} (p : a ＝ x) →
+    (λ b → map-left-unit-law-Σ-is-contr (x , b)) ＝ tr B (inv p)
+  map-left-unit-law-Σ-is-contr-test p = 
+    ( ind-singleton-test a C (λ x → B x → B a) (id) p) ∙
+    ( tr-function-type-fixed-codomain B (B a) p id)
+
+special-case :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (a : A) {x : A} (p : a ＝ x) → 
+  (λ b → map-left-unit-law-Σ-is-contr {B = B ∘ pr1} (is-torsorial-Id a) (a , refl) ((x , p) , b)) ＝
+  tr B (inv p)
+special-case {B = B} a {x = .a} refl =
+  map-left-unit-law-Σ-is-contr-test
+    ( is-torsorial-Id a)
+    ( a , refl)
+    ( refl)
+
+special-case' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (a : A) {x : A} (p : x ＝ a) → 
+  (λ b → map-left-unit-law-Σ-is-contr {B = B ∘ pr1} (is-torsorial-Id' a) (a , refl) ((x , p) , b)) ＝
+  tr B p
+special-case' a refl =
+  map-left-unit-law-Σ-is-contr-test
+    ( is-torsorial-Id' a)
+    ( a , refl)
+    ( refl)
 ```
 
 ### Right unit law for dependent pair types
